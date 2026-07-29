@@ -40,9 +40,9 @@ API
 │
 ├── Service (Business Logic)
 │
-├── Infrastructure (Repository + EF Core)
+├── Infrastructure ( Repository + EF Core + DbContext )
 │
-└── Data (Entities + DbContext)
+└── Data (Entities)
 ```
 
 ## Project Goal
