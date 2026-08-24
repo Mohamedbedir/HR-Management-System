@@ -1,6 +1,8 @@
 using HR.Core;
 using HR.Infrastructure;
+using HR.Infrastructure.Contexts;
 using HR.Service;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,12 +13,32 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Connection Sql Server
+builder.Services.AddDbContext<HRAppDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
 // Add dependencies from other layers
 builder.Services.AddInfrastructureDependencies()
                  .AddServiceDependencies()
                  .AddCoreDependencies();
 
 var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
+var service = scope.ServiceProvider;
+var dbcontext = service.GetRequiredService<HRAppDbContext>();
+var loggerfactory = service.GetRequiredService<ILoggerFactory>();
+try
+{
+    await dbcontext.Database.MigrateAsync();
+
+}catch(Exception ex)
+{
+    var logger = loggerfactory.CreateLogger<Program>();
+    logger.LogError(ex, "An Error Occurred During Applying Migrations Database");
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
