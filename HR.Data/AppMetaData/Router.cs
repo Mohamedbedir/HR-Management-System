@@ -12,9 +12,9 @@ namespace HR.Data.AppMetaData
         public const string Version = "v1";
         public const string Rule = root+"/"+Version+"/";
 
-        public static class InstructorRouting
+        public static class PositionRouting
         {
-            public const string Prefix = Rule+ "Instructor";
+            public const string Prefix = Rule+ "Position";
             public const string List = Prefix+"/List";
             public const string Paginated = Prefix+ "/Paginated";
             public const string ById = Prefix + "/ById"+ "/{id}";

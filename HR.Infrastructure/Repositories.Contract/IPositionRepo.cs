@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace HR.Infrastructure.Repositories.Contract
 {
-    public interface IDepartmentRepo : IGenericRepos<Department>
+    public interface IPositionRepo:IGenericRepos<Position>
     {
-       
     }
 }

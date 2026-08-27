@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace HR.Core.Features.Departments.Commands.Handlers
 {
-    public class DepartmentCommandHandler : ResponseHandler,
+    public class PositionCommandHandler : ResponseHandler,
         IRequestHandler<AddDepartmentCommand, Response<string>>,
         IRequestHandler<EditDepartmentCommand, Response<string>>,
         IRequestHandler<DeleteDepartmentCommand, Response<string>>
@@ -23,7 +23,7 @@ namespace HR.Core.Features.Departments.Commands.Handlers
         private readonly IMapper mapper;
         private readonly IStringLocalizer<SharedResources> localizer;
 
-        public DepartmentCommandHandler(IDepartmentService departmentService,
+        public PositionCommandHandler(IDepartmentService departmentService,
             IMapper mapper,
             IStringLocalizer<SharedResources> localizer):base(localizer) 
         {

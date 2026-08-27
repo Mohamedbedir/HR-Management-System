@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using HR.Data.Entities;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace HR.Infrastructure.Repositories.Contract
     {
         // Queries
         Task<T?> GetByIdAsync(int id);
-
+        Task<IReadOnlyList<T>> GetAllAsync();
         IQueryable<T> GetTableNoTracking();
 
         IQueryable<T> GetTableAsTracking();

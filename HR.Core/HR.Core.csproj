@@ -22,18 +22,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Positions\Commands\Handlers\" />
-    <Folder Include="Features\Positions\Commands\Models\" />
-    <Folder Include="Features\Positions\Commands\Validators\" />
-    <Folder Include="Features\Positions\Queries\Handlers\" />
-    <Folder Include="Features\Positions\Queries\Models\" />
-    <Folder Include="Features\Positions\Queries\Responses\" />
     <Folder Include="Features\Departments - Copy\Commands\Handlers\" />
     <Folder Include="Features\Departments - Copy\Commands\Models\" />
     <Folder Include="Features\Departments - Copy\Commands\Validators\" />
     <Folder Include="Features\Departments - Copy\Queries\Handlers\" />
     <Folder Include="Features\Departments - Copy\Queries\Models\" />
     <Folder Include="Features\Departments - Copy\Queries\Responses\" />
+    <Folder Include="Mapping\Positions - Copy\CommandMapping\" />
+    <Folder Include="Mapping\Positions - Copy\QueryMapping\" />
   </ItemGroup>
 
 </Project>

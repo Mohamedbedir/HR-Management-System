@@ -1,4 +1,5 @@
-﻿using HR.Infrastructure.Contexts;
+﻿using HR.Data.Entities;
+using HR.Infrastructure.Contexts;
 using HR.Infrastructure.Repositories.Contract;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -89,6 +90,11 @@ namespace HR.Infrastructure.Repositories
         public virtual void UpdateRangeAsync(ICollection<T> entities)
         {
             dbContext.Set<T>().UpdateRange(entities);
+        }
+
+        public async Task<IReadOnlyList<T>> GetAllAsync()
+        {
+            return await dbContext.Set<T>().ToListAsync();
         }
     }
 }

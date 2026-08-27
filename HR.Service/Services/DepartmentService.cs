@@ -21,7 +21,7 @@ namespace HR.Service.Services
         
         public async Task<IReadOnlyList<Department>> GetAllDepartmentsAsync()
         {
-            var departments= await departmentRepo.GetDepartmentsAsync();
+            var departments= await departmentRepo.GetAllAsync();
             return departments;
         }
 
@@ -57,7 +57,7 @@ namespace HR.Service.Services
              return await departmentRepo.GetTableNoTracking().AnyAsync(d => d.Name == name);
         }
 
-        public async Task<bool> IsStudentExistExcludeSelf(string name, int id)
+        public async Task<bool> IsDepartmentExistExcludeSelf(string name, int id)
         {
             var depart = await departmentRepo.GetTableNoTracking()
                 .Where(d => d.Name == name && !d.Id.Equals(id)).FirstOrDefaultAsync();

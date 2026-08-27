@@ -10,6 +10,7 @@ namespace HR.Infrastructure
         {
             //services.AddTransient<IStudentRepository, StudentRepository>();
             services.AddScoped<IDepartmentRepo, DepartmentRepo>();
+            services.AddScoped<IPositionRepo, PositionRepo>();
             services.AddTransient(typeof(IGenericRepos<>), typeof(GenericRepos<>));
 
             ////views
