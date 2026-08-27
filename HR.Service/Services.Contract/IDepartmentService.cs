@@ -19,6 +19,6 @@ namespace HR.Service.Services.Contract
 
         Task<string> DeleteDepartmentAsync(Department department);
         Task<bool> IsDepartmentExist(string name);
-        Task<bool> IsStudentExistExcludeSelf(string name,int id);
+        Task<bool> IsDepartmentExistExcludeSelf(string name,int id);
     }
 }

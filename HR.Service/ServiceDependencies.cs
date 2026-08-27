@@ -8,7 +8,8 @@ namespace HR.Service
     {
         public static IServiceCollection AddServiceDependencies(this IServiceCollection services)
         {
-            services.AddTransient<IDepartmentService, DepartmentService>();
+            services.AddScoped<IDepartmentService, DepartmentService>();
+            services.AddScoped<IPositionService, PositionService>();
             return services;
         }
 
