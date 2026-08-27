@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using HR.Service.Services;
+using HR.Service.Services.Contract;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HR.Service
 {
@@ -6,7 +8,7 @@ namespace HR.Service
     {
         public static IServiceCollection AddServiceDependencies(this IServiceCollection services)
         {
-            //services.AddTransient<IStudentService, StudentService>();
+            services.AddTransient<IDepartmentService, DepartmentService>();
             return services;
         }
 

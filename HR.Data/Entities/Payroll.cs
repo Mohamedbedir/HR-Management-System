@@ -11,8 +11,6 @@ namespace HR.Data.Entities
     public class Payroll: BaseEntity
     {
 
-        public int EmployeeId { get; set; }
-
         public int Month { get; set; }
 
         public int Year { get; set; }
@@ -30,6 +28,7 @@ namespace HR.Data.Entities
         public DateTime GeneratedAt { get; set; }
 
         // Navigation
+        public int EmployeeId { get; set; }
         public Employee Employee { get; set; } = null!;
 
         public ICollection<PayrollItem> Items { get; set; }

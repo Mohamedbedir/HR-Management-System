@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using HR.Infrastructure.Repositories;
+using HR.Infrastructure.Repositories.Contract;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HR.Infrastructure
 {
@@ -7,8 +9,8 @@ namespace HR.Infrastructure
         public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services)
         {
             //services.AddTransient<IStudentRepository, StudentRepository>();
-            
-            //services.AddTransient(typeof(IGenericRepositoryAsync<>), typeof(GenericRepositoryAsync<>));
+            services.AddScoped<IDepartmentRepo, DepartmentRepo>();
+            services.AddTransient(typeof(IGenericRepos<>), typeof(GenericRepos<>));
 
             ////views
             //services.AddTransient<IViewRepository<ViewDepartment>, ViewDepartmentRepository>();

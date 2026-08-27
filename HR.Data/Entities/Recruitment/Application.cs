@@ -10,11 +10,6 @@ namespace HR.Data.Entities.Recruitment
 {
     public class Application:BaseEntity
     {
-
-        public int CandidateId { get; set; }
-
-        public int JobPostingId { get; set; }
-
         public DateTime AppliedAt { get; set; }
 
         public ApplicationStatus Status { get; set; }
@@ -22,8 +17,9 @@ namespace HR.Data.Entities.Recruitment
         public string? Notes { get; set; }
 
         // Navigation
+        public int CandidateId { get; set; }
         public Candidate Candidate { get; set; } = null!;
-
+        public int JobPostingId { get; set; }
         public JobPosting JobPosting { get; set; } = null!;
     }
 }

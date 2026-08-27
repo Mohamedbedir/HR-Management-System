@@ -7,9 +7,33 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.2.0" />
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageReference Include="MediatR" Version="14.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.12" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.30" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\HR.Data\HR.Data.csproj" />
     <ProjectReference Include="..\HR.Infrastructure\HR.Infrastructure.csproj" />
     <ProjectReference Include="..\HR.Service\HR.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Positions\Commands\Handlers\" />
+    <Folder Include="Features\Positions\Commands\Models\" />
+    <Folder Include="Features\Positions\Commands\Validators\" />
+    <Folder Include="Features\Positions\Queries\Handlers\" />
+    <Folder Include="Features\Positions\Queries\Models\" />
+    <Folder Include="Features\Positions\Queries\Responses\" />
+    <Folder Include="Features\Departments - Copy\Commands\Handlers\" />
+    <Folder Include="Features\Departments - Copy\Commands\Models\" />
+    <Folder Include="Features\Departments - Copy\Commands\Validators\" />
+    <Folder Include="Features\Departments - Copy\Queries\Handlers\" />
+    <Folder Include="Features\Departments - Copy\Queries\Models\" />
+    <Folder Include="Features\Departments - Copy\Queries\Responses\" />
   </ItemGroup>
 
 </Project>

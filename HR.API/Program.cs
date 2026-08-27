@@ -1,8 +1,14 @@
 using HR.Core;
+using HR.Core.Middlewares;
 using HR.Infrastructure;
 using HR.Infrastructure.Contexts;
+using HR.Infrastructure.DataSeeding;
 using HR.Service;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +30,26 @@ builder.Services.AddInfrastructureDependencies()
                  .AddServiceDependencies()
                  .AddCoreDependencies();
 
+#region Localization
+builder.Services.AddLocalization(opt =>
+{
+    opt.ResourcesPath = "";
+});
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    List<CultureInfo> SupportedCulture = new List<CultureInfo>()
+    {
+        new CultureInfo("en-US"),
+        new CultureInfo("de-DE"),
+        new CultureInfo("fr-FR"),
+        new CultureInfo("ar-EG")
+    };
+    options.DefaultRequestCulture = new RequestCulture("en-US");
+    options.SupportedCultures = SupportedCulture;
+    options.SupportedUICultures = SupportedCulture;
+});
+#endregion
+
 var app = builder.Build();
 
 using var scope = app.Services.CreateScope();
@@ -33,8 +59,12 @@ var loggerfactory = service.GetRequiredService<ILoggerFactory>();
 try
 {
     await dbcontext.Database.MigrateAsync();
+    await DbSeeder.SeedDepartments(dbcontext);
+    await DbSeeder.SeedPositions(dbcontext);
+    await DbSeeder.SeedLeaveTypes(dbcontext);
 
-}catch(Exception ex)
+}
+catch(Exception ex)
 {
     var logger = loggerfactory.CreateLogger<Program>();
     logger.LogError(ex, "An Error Occurred During Applying Migrations Database");
@@ -46,6 +76,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+#region Localization Middleware
+var options = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
+app.UseRequestLocalization(options.Value);
+
+#endregion
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 

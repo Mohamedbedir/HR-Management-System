@@ -5,8 +5,6 @@ namespace HR.Data.Entities
 {
     public class PayrollItem : BaseEntity
     {
-        public int PayrollId { get; set; }
-
         public string Name { get; set; } = null!;
 
         public PayrollItemType Type { get; set; }
@@ -16,6 +14,7 @@ namespace HR.Data.Entities
         public string? Description { get; set; }
 
         // Navigation
+        public int PayrollId { get; set; }
         public Payroll Payroll { get; set; } = null!;
     }
 }

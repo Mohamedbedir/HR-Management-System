@@ -9,11 +9,6 @@ namespace HR.Data.Entities
 {
     public class PerformanceReview:BaseEntity
     {
-
-        public int EmployeeId { get; set; }
-
-        public int ReviewerId { get; set; }
-
         public DateTime ReviewDate { get; set; }
 
         public decimal Score { get; set; }
@@ -23,8 +18,9 @@ namespace HR.Data.Entities
         public DateTime CreatedAt { get; set; }
 
         // Navigation
+        public int EmployeeId { get; set; }
         public Employee Employee { get; set; } = null!;
-
+        public int ReviewerId { get; set; }
         public Employee Reviewer { get; set; } = null!;
     }
 }

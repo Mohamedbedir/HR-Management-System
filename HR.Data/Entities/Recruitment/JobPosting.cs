@@ -15,10 +15,6 @@ namespace HR.Data.Entities.Recruitment
 
         public string? Description { get; set; }
 
-        public int DepartmentId { get; set; }
-
-        public int PositionId { get; set; }
-
         public decimal MinSalary { get; set; }
 
         public decimal MaxSalary { get; set; }
@@ -30,8 +26,9 @@ namespace HR.Data.Entities.Recruitment
         public DateTime? ClosingDate { get; set; }
 
         // Navigation
+        public int DepartmentId { get; set; }
         public Department Department { get; set; } = null!;
-
+        public int PositionId { get; set; }
         public Position Position { get; set; } = null!;
 
         public ICollection<Application> Applications { get; set; }

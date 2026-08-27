@@ -17,14 +17,51 @@ namespace HR.Infrastructure.Configurations
         {
             builder.HasKey(x => x.Id);  
 
-            builder.Property(e => e.Status)
-                .IsRequired()
-                .HasConversion(
-                    statusName => (int)Enum.Parse<AttendanceStatus>(statusName.),
+         
+            // Date
+            builder.Property(x => x.Date)
+                .HasColumnType("date")
+                .IsRequired();
 
-                    // 2. عند القراءة إذا كان الرقم في الداتا بيز Null يرجع null، وإلا يحوله إلى نص اسم الـ Enum
-                    statusValue =>(AttendanceStatus)statusValue).ToString()
-                ) ;
+            // CheckIn
+            builder.Property(x => x.CheckIn)
+                .HasColumnType("time");
+
+            // CheckOut
+            builder.Property(x => x.CheckOut)
+                .HasColumnType("time");
+
+            // Status
+            builder.Property(x => x.Status)
+                .HasConversion<int>()
+                .IsRequired();
+
+            // LateMinutes
+            builder.Property(x => x.LateMinutes)
+                .IsRequired();
+
+            // OvertimeMinutes
+            builder.Property(x => x.OvertimeMinutes)
+                .IsRequired();
+
+            // Notes
+            builder.Property(x => x.Notes)
+                .HasMaxLength(500);
+
+            // Relationship
+            builder.HasOne(x => x.Employee)
+                .WithMany()
+                .HasForeignKey(x => x.EmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Important:
+            // One employee should have only one attendance record per day.
+            builder.HasIndex(x => new
+            {
+                x.EmployeeId,
+                x.Date
+            })
+            .IsUnique();
         }
     }
 }
