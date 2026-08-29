@@ -10,6 +10,7 @@ namespace HR.Service
         {
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IPositionService, PositionService>();
+            services.AddScoped<ILeaveTypeService, LeaveTypeService>();
             return services;
         }
 

@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace HR.Core.Features.Positions.Queries.Handlers
 {
-    public class PositionCommandHandler : ResponseHandler,
+    public class PositionQueryHandler : ResponseHandler,
         IRequestHandler<GetPositionByIdQuery, Response<GetPositionByIdResponse>>,
         IRequestHandler<GetPositionsQuery, Response<IReadOnlyList<GetPositionsResponse>>>
     {
@@ -24,7 +24,7 @@ namespace HR.Core.Features.Positions.Queries.Handlers
         private readonly IMapper mapper;
         private readonly IStringLocalizer<SharedResources> localizer;
 
-        public PositionCommandHandler(IPositionService positionService,
+        public PositionQueryHandler(IPositionService positionService,
             IMapper mapper,
             IStringLocalizer<SharedResources> localizer) : base(localizer)
         {
