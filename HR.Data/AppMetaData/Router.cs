@@ -14,25 +14,46 @@ namespace HR.Data.AppMetaData
 
         public static class PositionRouting
         {
-            public const string Prefix = Rule+ "Position";
-            public const string List = Prefix+"/List";
-            public const string Paginated = Prefix+ "/Paginated";
-            public const string ById = Prefix + "/ById"+ "/{id}";
-            public const string Create = Prefix + "/Create";
-            public const string Update = Prefix + "/Update";
-            public const string Delete = Prefix + "/Delete" + "/{id}";
+            public const string Prefix = Rule+ "Positions";
+            public const string List = Prefix+"";
+            public const string Paginated = Prefix+ "";
+            public const string ById = Prefix + ""+ "/{id}";
+            public const string Create = Prefix + "";
+            public const string Update = Prefix + "/{id}";
+            public const string Delete = Prefix + "/{id}";
+        }
+        public static class LeaveTypeRouting
+        {
+            public const string Prefix = Rule+ "LeaveTypes";
+            public const string List = Prefix + "";
+            public const string Paginated = Prefix + "";
+            public const string ById = Prefix + "" + "/{id}";
+            public const string Create = Prefix + "";
+            public const string Update = Prefix + "/{id}";
+            public const string Delete = Prefix + "/{id}";
         }
   
         public static class DepartmentRouting
         {
-            public const string Prefix = Rule+ "Department";
-            public const string List = Prefix+"/List";
-            public const string ById = Prefix + "/ById"+ "/{id}";
-            public const string Create = Prefix + "/Create";
-            public const string Update = Prefix + "/Update";
-            public const string Delete = Prefix + "/Delete"+ "/{id}";
+            public const string Prefix = Rule+ "Departments";
+            public const string List = Prefix + "";
+            public const string Paginated = Prefix + "";
+            public const string ById = Prefix + "" + "/{id}";
+            public const string Create = Prefix + "";
+            public const string Update = Prefix + "/{id}";
+            public const string Delete = Prefix + "/{id}";
         }
-        
+        //public static class DepartmentRouting
+        //{
+        //    public const string Prefix = Rule+ "Department";
+        //    public const string List = Prefix+"/List";
+        //public const string Paginated = Prefix + "/Paginated";
+        //    public const string ById = Prefix + "/ById"+ "/{id}";
+        //    public const string Create = Prefix + "/Create";
+        //    public const string Update = Prefix + "/Update";
+        //    public const string Delete = Prefix + "/Delete"+ "/{id}";
+        //}
+
         public static class UserRouting
         {
             public const string Prefix = Rule+ "User";

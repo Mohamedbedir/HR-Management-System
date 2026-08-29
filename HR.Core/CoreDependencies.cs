@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using HR.Core.Behaviors;
 using HR.Core.Mapping.Departments;
+using HR.Core.Mapping.LeaveTypes;
 using HR.Core.Mapping.Positions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,8 @@ namespace HR.Core
             //Configuration Of Automapper
             services.AddAutoMapper(cfg =>{}, typeof(DepartmentProfile).Assembly);
             services.AddAutoMapper(cfg =>{}, typeof(PositionProfile).Assembly);
+            services.AddAutoMapper(cfg => {}, typeof(LeaveTypeProfile).Assembly);
+
             //services.AddAutoMapper(Assembly.GetExecutingAssembly());
             // Get Validators
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

@@ -1,7 +1,7 @@
 ﻿using HR.Core.Bases;
-using HR.Core.Features.Departments.Commands.Models;
-using HR.Core.Features.Departments.Queries.Models;
-using HR.Core.Features.Departments.Queries.Responses;
+using HR.Core.Features.LeaveTypes.Commands.Models;
+using HR.Core.Features.LeaveTypes.Queries.Models;
+using HR.Core.Features.LeaveTypes.Queries.Responses;
 using HR.Core.Features.Positions.Commands.Models;
 using HR.Core.Features.Positions.Queries.Models;
 using HR.Core.Features.Positions.Queries.Responses;
@@ -13,57 +13,56 @@ using SchoolProject.API.Base;
 
 namespace HR.API.Controllers
 {
-    //[Route("api/[controller]")]
     [ApiController]
-    public class PositionController : AppControllerBase
+    public class LeaveTypeController : AppControllerBase
     {
-        [HttpGet(Router.PositionRouting.ById)]
-        [ProducesResponseType(typeof(Response<GetPositionByIdResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(NotFound<GetPositionByIdResponse>), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Response<GetPositionByIdResponse>>> GetPositionById([FromRoute] int id)
+        [HttpGet(Router.LeaveTypeRouting.ById)]
+        [ProducesResponseType(typeof(Response<GetLeaveTypeByIdResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFound<GetLeaveTypeByIdResponse>), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Response<GetLeaveTypeByIdResponse>>> GetLeaveTypeById([FromRoute] int id)
         {
-            var response = await mediator.Send(new GetPositionByIdQuery(id));
+            var response = await mediator.Send(new GetLeaveTypeByIdQuery(id));
             return NewResult(response);
         }
-        [HttpGet(Router.PositionRouting.List)]
-        [ProducesResponseType(typeof(Response<IReadOnlyList<GetPositionsResponse>>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<Response<IReadOnlyList<GetPositionsResponse>>>> GetPositionList()
+        [HttpGet(Router.LeaveTypeRouting.List)]
+        [ProducesResponseType(typeof(Response<IReadOnlyList<GetLeaveTypesResponse>>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<Response<IReadOnlyList<GetLeaveTypesResponse>>>> GetLeaveTypeList()
         {
-            var response = await mediator.Send(new GetPositionsQuery());
+            var response = await mediator.Send(new GetLeaveTypesQuery());
             return NewResult(response);
         }
 
 
-        [HttpPost(Router.PositionRouting.Create)]
+        [HttpPost(Router.LeaveTypeRouting.Create)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Response<string>>> CreatePosition([FromBody] AddPositionCommand model)
+        public async Task<ActionResult<Response<string>>> CreateLeaveType([FromBody] AddLeaveTypeCommand model)
         {
             var response = await mediator.Send(model);
             return NewResult(response);
         }
 
 
-        [HttpPut(Router.PositionRouting.Update)]
+        [HttpPut(Router.LeaveTypeRouting.Update)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Response<string>>> UpdatePosition([FromRoute] int id,
-                  [FromBody] EditPositionCommand model)
+        public async Task<ActionResult<Response<string>>> UpdateLeaveType([FromRoute] int id,
+            [FromBody] EditLeaveTypeCommand model)
         {
             model.Id = id;
             var response = await mediator.Send(model);
             return NewResult(response);
         }
 
-        [HttpDelete(Router.PositionRouting.Delete)]
+        [HttpDelete(Router.LeaveTypeRouting.Delete)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Response<string>>> DeletePosition([FromRoute] int id)
+        public async Task<ActionResult<Response<string>>> DeleteLeaveType([FromRoute] int id)
         {
-            var response = await mediator.Send(new DeletePositionCommand(id));
+            var response = await mediator.Send(new DeleteLeaveTypeCommand(id));
             return NewResult(response);
         }
     }

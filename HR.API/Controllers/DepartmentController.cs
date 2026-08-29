@@ -45,8 +45,10 @@ namespace HR.API.Controllers
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Response<string>>> UpdateDepartment([FromBody] EditDepartmentCommand model)
+        public async Task<ActionResult<Response<string>>> UpdateDepartment([FromRoute] int id ,
+            [FromBody] EditDepartmentCommand model)
         {
+            model.Id = id;
             var response = await mediator.Send(model);
             return NewResult(response);
         }

@@ -11,7 +11,8 @@ namespace HR.Infrastructure
             //services.AddTransient<IStudentRepository, StudentRepository>();
             services.AddScoped<IDepartmentRepo, DepartmentRepo>();
             services.AddScoped<IPositionRepo, PositionRepo>();
-            services.AddTransient(typeof(IGenericRepos<>), typeof(GenericRepos<>));
+            services.AddScoped<ILeaveTypeRepo, LeaveTypeRepo>();
+           //services.AddScoped(typeof(IGenericRepos<>), typeof(GenericRepos<>)); // unitofWork
 
             ////views
             //services.AddTransient<IViewRepository<ViewDepartment>, ViewDepartmentRepository>();
