@@ -1,17 +1,17 @@
-﻿using HR.Data.Entities.Common;
+﻿using HR.Core.Bases;
 using HR.Data.Enums;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HR.Data.Entities
+namespace HR.Core.Features.Employees.Commands.Models
 {
-    public class Employee : BaseEntity, IAuditable
+    public class EditEmployeeCommand:IRequest<Response<string>>
     {
-        //public int Id { get; set; }
-        public string EmployeeNumber { get; private set; } = null!;
+        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -23,20 +23,10 @@ namespace HR.Data.Entities
         public decimal Salary { get; set; }
         public EmployeeStatus? Status { get; set; }
         public Gender? Gender { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
 
         // Relations
         public int? DepartmentId { get; set; }
-        public Department? Department { get; set; }
         public int? PositionId { get; set; }
-        public Position? Position { get; set; }
         public int? ManagerId { get; set; }
-        public Employee? Manager { get; set; }
-
-        public ICollection<Employee> Subordinates { get; set; } = new HashSet<Employee>();
-
-
-
     }
 }

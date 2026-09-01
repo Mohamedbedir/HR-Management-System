@@ -92,7 +92,7 @@ namespace HR.Infrastructure.Repositories
             dbContext.Set<T>().UpdateRange(entities);
         }
 
-        public async Task<IReadOnlyList<T>> GetAllAsync()
+        public virtual async Task<IReadOnlyList<T>> GetAllAsync()
         {
             return await dbContext.Set<T>().ToListAsync();
         }

@@ -47,13 +47,19 @@ namespace HR.Core.Features.Positions.Commands.Handlers
 
             if (pos == null)
                 return NotFound<string>();
+            try
+            {
+                var resdelete = await positionService.DeletePositionAsync(pos);
 
-            var resdelete = await positionService.DeletePositionAsync(pos);
+                if (resdelete != "Success")
+                    return BadRequest<string>();
 
-            if (resdelete != "Success")
-                return BadRequest<string>();
-
-            return Deleted<string>();
+                return Deleted<string>();
+            }
+            catch (Exception ex)
+            {
+                return Conflict<string>(ex.Message);
+            }
         }
 
         public async Task<Response<string>> Handle(EditPositionCommand request, CancellationToken cancellationToken)

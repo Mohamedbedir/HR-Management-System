@@ -50,29 +50,25 @@ namespace HR.Infrastructure.Configurations
                 .HasColumnType("decimal(18,2)"); // تحديد دقة الرقم العشري
 
             builder.Property(e => e.Status)
-                .IsRequired(false) 
-                .HasConversion(
-                    statusName => string.IsNullOrEmpty(statusName)
-                        ? (int?)null
-                        : (int)Enum.Parse<EmployeeStatus>(statusName),
-
-                    statusValue => statusValue == null
-                        ? null
-                        : ((EmployeeStatus)statusValue).ToString()
-                )
-                .HasDefaultValue(EmployeeStatus.Active.ToString());
+                .IsRequired(false)
+                .HasConversion<int?>()
+                .HasDefaultValue(EmployeeStatus.Active);
 
             builder.Property(e => e.Gender)
-               .IsRequired(false)
-               .HasConversion(
-                   gendername => string.IsNullOrEmpty(gendername)
-                       ? (int?)null
-                       : (int)Enum.Parse<Gender>(gendername),
+                .IsRequired(false)
+                .HasConversion<int?>();
 
-                   gendervalue => gendervalue == null
-                       ? null
-                       : ((Gender)gendervalue).ToString()
-               );
+            //builder.Property(e => e.Gender)
+            //   .IsRequired(false)
+            //   .HasConversion(
+            //       gendername => string.IsNullOrEmpty(gendername)
+            //           ? (int?)null
+            //           : (int)Enum.Parse<Gender>(gendername),
+
+            //       gendervalue => gendervalue == null
+            //           ? null
+            //           : ((Gender)gendervalue).ToString()
+            //   );
 
             builder.Property(e => e.HireDate)
                .IsRequired();

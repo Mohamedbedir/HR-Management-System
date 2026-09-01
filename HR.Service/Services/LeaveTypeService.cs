@@ -28,9 +28,24 @@ namespace HR.Service.Services
 
         public async Task<string> DeleteLeaveTypeAsync(LeaveType LeaveType)
         {
-            leaveTypeRepo.DeleteAsync(LeaveType);
-            await leaveTypeRepo.SaveChangesAsync();
-            return "Success";
+            try
+            {
+                leaveTypeRepo.DeleteAsync(LeaveType);
+                await leaveTypeRepo.SaveChangesAsync();
+                return "Success";
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains(
+                        "REFERENCE constraint",
+                        StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    throw new Exception(
+                        "Cannot delete this LeaveType because it is assigned to other records.");
+                }
+
+                throw;
+            }
         }
 
         public async Task<IReadOnlyList<LeaveType>> GetAllLeaveTypesAsync()

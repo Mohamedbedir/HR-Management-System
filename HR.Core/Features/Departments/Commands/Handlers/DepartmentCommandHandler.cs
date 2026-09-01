@@ -49,12 +49,19 @@ namespace HR.Core.Features.Departments.Commands.Handlers
             if (depart == null)
                 return NotFound<string>();
 
-            var resdelete = await departmentService.DeleteDepartmentAsync(depart);
+            try
+            {
+                var resdelete = await departmentService.DeleteDepartmentAsync(depart);
 
-            if (resdelete != "Success")
-                return BadRequest<string>();
+                if (resdelete != "Success")
+                    return BadRequest<string>(resdelete);
 
-            return Deleted<string>();
+                return Deleted<string>(resdelete);
+            }
+            catch (Exception ex)
+            {
+                return Conflict<string>(ex.Message);
+            }
         }
 
         public async Task<Response<string>> Handle(EditDepartmentCommand request, CancellationToken cancellationToken)

@@ -49,12 +49,19 @@ namespace HR.Core.Features.LeaveTypes.Commands.Handlers
             if (leaveType == null)
                 return NotFound<string>();
 
-            var resdelete = await leaveTypeService.DeleteLeaveTypeAsync(leaveType);
+            try
+            {
+                var resdelete = await leaveTypeService.DeleteLeaveTypeAsync(leaveType);
 
-            if (resdelete != "Success")
-                return BadRequest<string>();
+                if (resdelete != "Success")
+                    return BadRequest<string>();
 
-            return Deleted<string>();
+                return Deleted<string>();
+            }
+            catch (Exception ex)
+            {
+                return Conflict<string>(ex.Message);
+            }
         }
 
         public async Task<Response<string>> Handle(EditLeaveTypeCommand request, CancellationToken cancellationToken)

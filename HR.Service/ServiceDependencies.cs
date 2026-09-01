@@ -11,6 +11,7 @@ namespace HR.Service
             services.AddScoped<IDepartmentService, DepartmentService>();
             services.AddScoped<IPositionService, PositionService>();
             services.AddScoped<ILeaveTypeService, LeaveTypeService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
             return services;
         }
 

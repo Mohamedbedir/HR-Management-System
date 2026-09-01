@@ -26,6 +26,8 @@ namespace SchoolProject.API.Base
                     return new UnauthorizedObjectResult(response);
                 case HttpStatusCode.BadRequest:
                     return new BadRequestObjectResult(response);
+                case HttpStatusCode.Conflict:
+                    return new ConflictObjectResult(response);
                 case HttpStatusCode.NotFound:
                     return new NotFoundObjectResult(response);
                 case HttpStatusCode.Accepted:

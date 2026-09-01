@@ -77,6 +77,17 @@ namespace HR.Core.Bases
             };
         }
 
+        public Response<T> Conflict<T>(string Message = null)
+        {
+            return new Response<T>()
+            {
+                StatusCode = System.Net.HttpStatusCode.Conflict,
+                Succeeded = false,
+                Message = Message == null ? "Conflict" : Message
+            };
+        }
+
+
         public Response<T> NotFound<T>(string message = null)
         {
             return new Response<T>()
@@ -103,7 +114,7 @@ namespace HR.Core.Bases
             return new Response<T>()
             {
                 Data = entity,
-                StatusCode = System.Net.HttpStatusCode.Created,
+                StatusCode = System.Net.HttpStatusCode.NoContent,
                 Succeeded = true,
                 Message = localizer[SharedResourcesKeys.Updated],
                 Meta = Meta

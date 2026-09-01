@@ -40,9 +40,25 @@ namespace HR.Service.Services
 
         public async Task<string> DeleteDepartmentAsync(Department department)
         {
-            departmentRepo.DeleteAsync(department);
-            await departmentRepo.SaveChangesAsync();
-            return "Success";
+            try
+            {
+                departmentRepo.DeleteAsync(department);
+                await departmentRepo.SaveChangesAsync();
+
+                return "Success";
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException?.Message.Contains(
+                        "REFERENCE constraint",
+                        StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    throw new Exception(
+                        "Cannot delete this department because it is assigned to other records.");
+                }
+
+                throw;
+            }
         }
 
         public async Task<string> UpdateDepartmentAsync(Department department)
@@ -64,6 +80,11 @@ namespace HR.Service.Services
             if(depart== null)
                 return false;
             return true;
+        }
+
+        public async Task<bool> IsDepartmentExistById(int id)
+        {
+            return await departmentRepo.GetTableNoTracking().AnyAsync(d => d.Id == id);
         }
     }
 }

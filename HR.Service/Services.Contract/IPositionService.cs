@@ -19,6 +19,7 @@ namespace HR.Service.Services.Contract
 
         Task<string> DeletePositionAsync(Position position);
         Task<bool> IsPositionExist(string title);
+        Task<bool> IsPositionExistById(int id);
         Task<bool> IsPositionExistExcludeSelf(string title, int id);
     }
 }
