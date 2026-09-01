@@ -4,7 +4,9 @@ using HR.Core.Mapping.Departments;
 using HR.Core.Mapping.Employees;
 using HR.Core.Mapping.LeaveTypes;
 using HR.Core.Mapping.Positions;
+using HR.Core.ResolverFile;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -21,6 +23,9 @@ namespace HR.Core
             services.AddAutoMapper(cfg =>{}, typeof(PositionProfile).Assembly);
             services.AddAutoMapper(cfg => {}, typeof(LeaveTypeProfile).Assembly);
             services.AddAutoMapper(cfg => {}, typeof(EmployeeProfile).Assembly);
+
+            services.AddTransient<EmpDocumentFileResolver>();
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
             //services.AddAutoMapper(Assembly.GetExecutingAssembly());
             // Get Validators

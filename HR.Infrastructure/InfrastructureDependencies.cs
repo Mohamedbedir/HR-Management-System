@@ -13,6 +13,7 @@ namespace HR.Infrastructure
             services.AddScoped<IPositionRepo, PositionRepo>();
             services.AddScoped<ILeaveTypeRepo, LeaveTypeRepo>();
             services.AddScoped<IEmployeeRepo, EmployeeRepo>();
+            services.AddScoped<IEmployeeDocumentRepo, EmployeeDocumentRepo>();
            //services.AddScoped(typeof(IGenericRepos<>), typeof(GenericRepos<>)); // unitofWork
 
             ////views

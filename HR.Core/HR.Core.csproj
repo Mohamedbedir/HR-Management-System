@@ -28,6 +28,7 @@
     <Folder Include="Features\Departments - Copy\Queries\Handlers\" />
     <Folder Include="Features\Departments - Copy\Queries\Models\" />
     <Folder Include="Features\Departments - Copy\Queries\Responses\" />
+    <Folder Include="Mapping\EmployeeDocuments\CommandMapping\" />
     <Folder Include="Mapping\Positions - Copy\CommandMapping\" />
     <Folder Include="Mapping\Positions - Copy\QueryMapping\" />
   </ItemGroup>

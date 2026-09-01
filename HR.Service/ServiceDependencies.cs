@@ -12,6 +12,9 @@ namespace HR.Service
             services.AddScoped<IPositionService, PositionService>();
             services.AddScoped<ILeaveTypeService, LeaveTypeService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IEmployeeDocumentService, EmployeeDocumentService>();
+
+            services.AddTransient<IFileService, FileService>();
             return services;
         }
 
