@@ -30,11 +30,11 @@ namespace HR.Infrastructure.Configurations
 
             // Dates
             builder.Property(x => x.StartDate)
-                .HasColumnType("datetime2")
+                .HasColumnType("date")
                 .IsRequired();
 
             builder.Property(x => x.EndDate)
-                .HasColumnType("datetime2");
+                .HasColumnType("date");
 
             // Reason
             builder.Property(x => x.Reason)

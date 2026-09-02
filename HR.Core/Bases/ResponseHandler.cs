@@ -114,7 +114,7 @@ namespace HR.Core.Bases
             return new Response<T>()
             {
                 Data = entity,
-                StatusCode = System.Net.HttpStatusCode.NoContent,
+                StatusCode = System.Net.HttpStatusCode.OK,
                 Succeeded = true,
                 Message = localizer[SharedResourcesKeys.Updated],
                 Meta = Meta

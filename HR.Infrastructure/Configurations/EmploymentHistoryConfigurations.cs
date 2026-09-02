@@ -42,11 +42,11 @@ namespace HR.Infrastructure.Configurations
             // Properties
 
             builder.Property(x => x.StartDate)
-                .HasColumnType("datetime2")
+                .HasColumnType("date")
                 .IsRequired();
 
             builder.Property(x => x.EndDate)
-                .HasColumnType("datetime2");
+                .HasColumnType("date");
 
             builder.Property(x => x.Reason)
                 .HasMaxLength(500);

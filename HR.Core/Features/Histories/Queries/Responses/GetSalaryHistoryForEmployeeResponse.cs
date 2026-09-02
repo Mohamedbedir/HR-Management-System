@@ -1,15 +1,15 @@
-﻿using System;
+﻿using HR.Data.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HR.Data.Entities
+namespace HR.Core.Features.Histories.Queries.Responses
 {
-    public class SalaryHistory
+    public class GetSalaryHistoryForEmployeeResponse
     {
         public long Id { get; set; }
-
 
         public decimal Salary { get; set; }
 
@@ -22,6 +22,6 @@ namespace HR.Data.Entities
         // Navigation
         public int? EmployeeId { get; set; }
 
-        public Employee? Employee { get; set; } 
+        public string? EmployeeName { get; set; }
     }
 }

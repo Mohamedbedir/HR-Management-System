@@ -15,6 +15,8 @@ namespace HR.Data.AppMetaData
         public static class EmployeeRouting
         {
             public const string Prefix = Rule+ "Employees";
+            public const string SalaryHistory = Prefix + "/SalaryHistory"+"/{employeeId}";
+            public const string EmploymentHistory = Prefix + "/EmploymentHistory" + "/{employeeId}";
             public const string List = Prefix+"";
             public const string Paginated = Prefix+ "";
             public const string ById = Prefix + ""+ "/{id}";

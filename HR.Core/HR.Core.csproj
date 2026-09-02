@@ -22,6 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Histories\Commands\Handlers\" />
+    <Folder Include="Features\Histories\Commands\Models\" />
+    <Folder Include="Features\Histories\Commands\Validators\" />
     <Folder Include="Features\Departments - Copy\Commands\Handlers\" />
     <Folder Include="Features\Departments - Copy\Commands\Models\" />
     <Folder Include="Features\Departments - Copy\Commands\Validators\" />
@@ -29,6 +32,7 @@
     <Folder Include="Features\Departments - Copy\Queries\Models\" />
     <Folder Include="Features\Departments - Copy\Queries\Responses\" />
     <Folder Include="Mapping\EmployeeDocuments\CommandMapping\" />
+    <Folder Include="Mapping\Histories\CommandMapping\" />
     <Folder Include="Mapping\Positions - Copy\CommandMapping\" />
     <Folder Include="Mapping\Positions - Copy\QueryMapping\" />
   </ItemGroup>

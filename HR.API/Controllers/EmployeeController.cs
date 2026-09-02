@@ -2,9 +2,13 @@
 using HR.Core.Features.Departments.Commands.Models;
 using HR.Core.Features.Departments.Queries.Models;
 using HR.Core.Features.Departments.Queries.Responses;
+using HR.Core.Features.EmployeeDocuments.Queries.Models;
+using HR.Core.Features.EmployeeDocuments.Queries.Responses;
 using HR.Core.Features.Employees.Commands.Models;
 using HR.Core.Features.Employees.Queries.Models;
 using HR.Core.Features.Employees.Queries.Responses;
+using HR.Core.Features.Histories.Queries.Models;
+using HR.Core.Features.Histories.Queries.Responses;
 using HR.Data.AppMetaData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -22,6 +26,22 @@ namespace HR.API.Controllers
         public async Task<ActionResult<Response<GetEmployeeByIdResponse>>> GetEmployeeById([FromRoute] int id)
         {
             var response = await mediator.Send(new GetEmployeeByIdQuery(id));
+            return NewResult(response);
+        }
+        [HttpGet(Router.EmployeeRouting.EmploymentHistory)]
+        [ProducesResponseType(typeof(Response<List<GetHistoryForEmployeeResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFound<List<GetHistoryForEmployeeResponse>>), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Response<List<GetHistoryForEmployeeResponse>>>> GetHistoryForEmployee([FromRoute] int employeeId)
+        {
+            var response = await mediator.Send(new GetHistoryForEmployeeQuery(employeeId));
+            return NewResult(response);
+        }
+        [HttpGet(Router.EmployeeRouting.SalaryHistory)]
+        [ProducesResponseType(typeof(Response<List<GetSalaryHistoryForEmployeeResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFound<List<GetSalaryHistoryForEmployeeResponse>>), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Response<List<GetSalaryHistoryForEmployeeResponse>>>> GetSalaryHistoryForEmployee([FromRoute] int employeeId)
+        {
+            var response = await mediator.Send(new GetSalaryHistoryForEmployeeQuery(employeeId));
             return NewResult(response);
         }
 

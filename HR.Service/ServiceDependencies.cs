@@ -13,6 +13,8 @@ namespace HR.Service
             services.AddScoped<ILeaveTypeService, LeaveTypeService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IEmployeeDocumentService, EmployeeDocumentService>();
+            services.AddScoped<IEmploymentHistoryService, EmploymentHistoryService>();
+            services.AddScoped<ISalaryHistoryService, SalaryHistoryService>();
 
             services.AddTransient<IFileService, FileService>();
             return services;

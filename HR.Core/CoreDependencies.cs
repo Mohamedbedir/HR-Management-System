@@ -2,6 +2,7 @@
 using HR.Core.Behaviors;
 using HR.Core.Mapping.Departments;
 using HR.Core.Mapping.Employees;
+using HR.Core.Mapping.Histories;
 using HR.Core.Mapping.LeaveTypes;
 using HR.Core.Mapping.Positions;
 using HR.Core.ResolverFile;
@@ -23,6 +24,7 @@ namespace HR.Core
             services.AddAutoMapper(cfg =>{}, typeof(PositionProfile).Assembly);
             services.AddAutoMapper(cfg => {}, typeof(LeaveTypeProfile).Assembly);
             services.AddAutoMapper(cfg => {}, typeof(EmployeeProfile).Assembly);
+            services.AddAutoMapper(cfg => {}, typeof(HistoryProfile).Assembly);
 
             services.AddTransient<EmpDocumentFileResolver>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();

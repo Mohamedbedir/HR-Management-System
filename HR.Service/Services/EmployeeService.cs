@@ -15,17 +15,59 @@ namespace HR.Service.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly IEmployeeRepo employeeRepo;
+        private readonly IEmploymentHistoryRepo employmentHistoryRepo;
+        private readonly ISalaryHistoryRepo salaryHistoryRepo;
 
-        public EmployeeService(IEmployeeRepo employeeRepo)
+        public EmployeeService(IEmployeeRepo employeeRepo ,
+            IEmploymentHistoryRepo employmentHistoryRepo,
+            ISalaryHistoryRepo salaryHistoryRepo)
         {
             this.employeeRepo = employeeRepo;
+            this.employmentHistoryRepo = employmentHistoryRepo;
+            this.salaryHistoryRepo = salaryHistoryRepo;
         }
         public async Task<string> AddEmployeeAsync(Employee employee)
         {
-            await employeeRepo.AddAsync(employee);
-            await employeeRepo.SaveChangesAsync();
-            return "Success";
+            var transaction = employeeRepo.BeginTransactionAsync();
+
+            try
+            {
+                await employeeRepo.AddAsync(employee);
+
+                var employmentHistory = new EmploymentHistory
+                {
+                    Employee = employee,
+                    DepartmentId = employee.DepartmentId!.Value,
+                    PositionId = employee.PositionId!.Value,
+                    StartDate = employee.HireDate,
+                    Reason = "Initial Hiring"
+                };
+
+                await employmentHistoryRepo.AddAsync(employmentHistory);
+
+                var salaryHistory = new SalaryHistory
+                {
+                    Employee = employee,
+                    Salary = employee.Salary,
+                    StartDate = employee.HireDate,
+                    Reason = "Initial Salary"
+                };
+
+                await salaryHistoryRepo.AddAsync(salaryHistory);
+
+                await employeeRepo.SaveChangesAsync();
+
+                await employeeRepo.CommitAsync();
+
+                return "Success";
+            }
+            catch
+            {
+                await employeeRepo.RollBackAsync();
+                throw;
+            }
         }
+       
 
         public async Task<string> DeleteEmployeeAsync(Employee employee)
         {
@@ -115,120 +157,106 @@ namespace HR.Service.Services
 
         public async Task<string> UpdateEmployeeAsync(Employee employee)
         {
-            //var oldEmployee = await employeeRepo
-            //    .GetTableNoTracking()
-            //    .FirstOrDefaultAsync(x => x.Id == employee.Id);
+            var oldEmployee = await employeeRepo
+                .GetTableNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == employee.Id);
 
-            //if (oldEmployee == null)
-            //    throw new Exception("Employee not found.");
+            if (oldEmployee == null)
+                throw new Exception("Employee not found.");
 
-            //var transaction = await employeeRepo.BeginTransactionAsync();
+            var transaction = await employeeRepo.BeginTransactionAsync();
 
-            //try
-            //{
-            //    // ============================
-            //    // 1. Salary Changed
-            //    // ============================
+            try
+            {
+                // 1. Salary Changed
 
-            //    if (oldEmployee.Salary != employee.Salary)
-            //    {
-            //        var salaryHistory = new SalaryHistory
-            //        {
-            //            EmployeeId = employee.Id,
-            //            Salary = employee.Salary,
-            //            EffectiveDate = DateTime.UtcNow,
-            //            Reason = "Salary updated"
-            //        };
+                if (oldEmployee.Salary != employee.Salary)
+                {
+                    var currentHistory = await salaryHistoryRepo
+                        .GetTableAsTracking()
+                        .FirstOrDefaultAsync(x =>
+                            x.EmployeeId == employee.Id &&
+                            x.EndDate == null);
 
-            //        await salaryHistoryRepo.AddAsync(salaryHistory);
-            //    }
+                    if (currentHistory != null)
+                    {
+                        currentHistory.EndDate = DateOnly.FromDateTime(DateTime.Now);
 
-            //    // ============================
-            //    // 2. Department / Position Changed
-            //    // ============================
+                        salaryHistoryRepo.UpdateAsync(currentHistory);
+                    }
 
-            //    if (oldEmployee.DepartmentId != employee.DepartmentId ||
-            //        oldEmployee.PositionId != employee.PositionId)
-            //    {
-            //        var currentHistory = await employmentHistoryRepo
-            //            .GetTableAsTracking()
-            //            .FirstOrDefaultAsync(x =>
-            //                x.EmployeeId == employee.Id &&
-            //                x.EndDate == null);
+                    var salaryHistory = new SalaryHistory
+                    {
+                        EmployeeId = employee.Id,
+                        Salary = employee.Salary,
+                        StartDate = DateOnly.FromDateTime(DateTime.Now),
+                        Reason = "Salary updated"
+                    };
 
-            //        if (currentHistory != null)
-            //        {
-            //            currentHistory.EndDate = DateTime.UtcNow;
+                    await salaryHistoryRepo.AddAsync(salaryHistory);
+                }
 
-            //            await employmentHistoryRepo.UpdateAsync(currentHistory);
-            //        }
+                // 2. Department / Position Changed
 
-            //        if (employee.DepartmentId.HasValue &&
-            //            employee.PositionId.HasValue)
-            //        {
-            //            var employmentHistory = new EmploymentHistory
-            //            {
-            //                EmployeeId = employee.Id,
-            //                DepartmentId = employee.DepartmentId.Value,
-            //                PositionId = employee.PositionId.Value,
-            //                StartDate = DateTime.UtcNow,
-            //                Salary = employee.Salary,
-            //                Reason = "Department or Position changed"
-            //            };
+                if (oldEmployee.DepartmentId != employee.DepartmentId ||
+                    oldEmployee.PositionId != employee.PositionId)
+                {
+                    var currentHistory = await employmentHistoryRepo
+                        .GetTableAsTracking()
+                        .FirstOrDefaultAsync(x =>
+                            x.EmployeeId == employee.Id &&
+                            x.EndDate == null);
 
-            //            await employmentHistoryRepo.AddAsync(employmentHistory);
-            //        }
-            //    }
+                    if (currentHistory != null)
+                    {
+                        currentHistory.EndDate = DateOnly.FromDateTime(DateTime.UtcNow);
 
-            //    // ============================
-            //    // 3. Update Employee
-            //    // ============================
+                        employmentHistoryRepo.UpdateAsync(currentHistory);
+                    }
 
-            //    employeeRepo.UpdateAsync(employee);
+                    if (employee.DepartmentId.HasValue &&
+                        employee.PositionId.HasValue)
+                    {
+                        var employmentHistory = new EmploymentHistory
+                        {
+                            EmployeeId = employee.Id,
+                            DepartmentId = employee.DepartmentId.Value,
+                            PositionId = employee.PositionId.Value,
+                            StartDate = DateOnly.FromDateTime(DateTime.Now),
+                            Reason = "Department or Position changed"
+                        };
 
-            //    // ============================
-            //    // 4. Save All Changes
-            //    // ============================
+                        await employmentHistoryRepo.AddAsync(employmentHistory);
+                    }
+                }
 
-            //    await employeeRepo.SaveChangesAsync();
+                // 3. Update Employee
 
-            //    // ============================
-            //    // 5. Commit
-            //    // ============================
+                employeeRepo.UpdateAsync(employee);
 
-            //    await employeeRepo.CommitAsync();
+                // 4. Save All Changes
+                
+                await employeeRepo.SaveChangesAsync();
 
-            //    return "Success";
-            //}
-            //catch
-            //{
-            //    // ============================
-            //    // Rollback
-            //    // ============================
+                // 5. Commit
 
-            //    await employeeRepo.RollBackAsync();
+                await employeeRepo.CommitAsync();
 
-            //    throw;
-            //}
-            //finally
-            //{
-            //    await transaction.DisposeAsync();
-            //}
-            employeeRepo.UpdateAsync(employee);
+                return "Success";
+            }
+            catch
+            {
+                // Rollback
 
-            // ============================
-            // 4. Save All Changes
-            // ============================
+                await employeeRepo.RollBackAsync();
 
-            await employeeRepo.SaveChangesAsync();
+                throw;
+            }
+            finally
+            {
+                await transaction.DisposeAsync();
+            }
 
-            // ============================
-            // 5. Commit
-            // ============================
-
-            //await employeeRepo.CommitAsync();
-
-            return "Success";
         }
     }
 }
