@@ -1,4 +1,5 @@
 ﻿using HR.Data.Entities;
+using HR.Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,7 @@ namespace HR.Service.Services.Contract
         Task<string> AddAsync(Attendance attendance);
 
         Task<string> UpdateAsync(Attendance attendance);
+        Task SaveChangesAsync();
+        
     }
 }

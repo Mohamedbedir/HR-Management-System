@@ -33,6 +33,7 @@ namespace HR.Service.Services
         {
             var query = attendanceRepo
                 .GetTableNoTracking()
+                .Include(e => e.Employee)
                 .Where(x => x.EmployeeId == employeeId);
 
             if (fromDate.HasValue)
@@ -49,6 +50,7 @@ namespace HR.Service.Services
         {
             var query = attendanceRepo
                 .GetTableNoTracking()
+                .Include(e=>e.Employee)
                 .Where(x => x.EmployeeId == employeeId);
             
             return await query.ToListAsync();
@@ -73,6 +75,11 @@ namespace HR.Service.Services
         {
             attendanceRepo.UpdateAsync(attendance);
             return "Success";
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await attendanceRepo.SaveChangesAsync();
         }
     }
 }
