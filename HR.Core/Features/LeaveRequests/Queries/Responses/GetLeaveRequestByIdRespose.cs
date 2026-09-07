@@ -1,9 +1,14 @@
-﻿using HR.Data.Entities.Common;
+﻿using HR.Data.Entities;
 using HR.Data.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace HR.Data.Entities
+namespace HR.Core.Features.LeaveRequests.Queries.Responses
 {
-    public class LeaveRequest: BaseEntity
+    public class GetLeaveRequestByIdRespose
     {
         public DateOnly StartDate { get; set; }
 
@@ -18,12 +23,8 @@ namespace HR.Data.Entities
         public DateTime CreatedAt { get; set; }
         public string? RejectionReason { get; set; }
         // Navigation
-        public int EmployeeId { get; set; }
-
-        public Employee Employee { get; set; } = null!;
-        public int LeaveTypeId { get; set; }
-        public LeaveType LeaveType { get; set; } = null!;
-        public int? ApprovedById { get; set; }
-        public Employee? ApprovedBy { get; set; }
+        public string EmployeeName { get; set; }
+        public string LeaveType { get; set; } 
+        public string ApprovedByName { get; set; }
     }
 }

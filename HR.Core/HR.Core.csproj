@@ -34,6 +34,7 @@
     <Folder Include="Mapping\EmployeeDocuments\CommandMapping\" />
     <Folder Include="Mapping\Histories\CommandMapping\" />
     <Folder Include="Mapping\Attendances\CommandMapping\" />
+    <Folder Include="Mapping\LeaveRequests\CommandMapping\" />
     <Folder Include="Mapping\Positions - Copy\CommandMapping\" />
     <Folder Include="Mapping\Positions - Copy\QueryMapping\" />
   </ItemGroup>

@@ -44,6 +44,8 @@ namespace HR.Infrastructure.Configurations
             builder.Property(x => x.CreatedAt)
                 .HasColumnType("datetime2")
                 .IsRequired();
+            builder.Property(x => x.RejectionReason)
+                .HasMaxLength(1000);
 
             // Employee -> LeaveRequests
             builder.HasOne(x => x.Employee)
