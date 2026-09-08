@@ -22,6 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Payrolls\Commands\Handlers\" />
+    <Folder Include="Features\Payrolls\Queries\Handlers\" />
+    <Folder Include="Features\Payrolls\Queries\Models\" />
+    <Folder Include="Features\Payrolls\Queries\Responses\" />
     <Folder Include="Features\Histories\Commands\Handlers\" />
     <Folder Include="Features\Histories\Commands\Models\" />
     <Folder Include="Features\Histories\Commands\Validators\" />
