@@ -8,11 +8,13 @@ namespace HR.Data.Enums
 {
     public enum PayrollItemType
     {
-        Allowance = 1,
-        Bonus = 2,
-        Deduction = 3,
-        Tax = 4,
-        Insurance = 5,
-        Overtime = 6
+        BasicSalary = 1,
+        Overtime = 2,
+        Bonus = 3,
+        Allowance = 4,
+        UnpaidLeave = 5,
+        Deduction = 6,
+        Tax = 7,
+        Insurance = 8
     }
 }

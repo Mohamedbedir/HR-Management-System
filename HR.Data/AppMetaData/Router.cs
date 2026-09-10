@@ -12,6 +12,22 @@ namespace HR.Data.AppMetaData
         public const string Version = "v1";
         public const string Rule = root+"/"+Version+"/";
 
+        public static class PayrollRouting
+        {
+            public const string Prefix = Rule+ "Payrolls";
+            public const string List = Prefix+"";
+            public const string Paginated = Prefix+ "";
+            public const string ForEmployee = Prefix + "/Employee"+ "/{EmployeeId}";
+            public const string ForEmployeeByDate = Prefix + "/ByDate"+ "/{EmployeeId}";
+            public const string ById = Prefix + ""+ "/{id}";
+            public const string Create = Prefix + "";
+            public const string Calculate = Prefix + "" + "/Calculate";
+            public const string Approve = Prefix + "" + "/Approve";
+            public const string Pay = Prefix + "" +"/Pay";
+            public const string Cancel = Prefix + "" + "/Cancel";
+            public const string Update = Prefix + "/{id}";
+            public const string Delete = Prefix + "/{id}";
+        }
         public static class LeaveRequestRouting
         {
             public const string Prefix = Rule+ "LeaveRequests";

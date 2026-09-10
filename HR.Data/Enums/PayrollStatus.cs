@@ -10,7 +10,9 @@ namespace HR.Data.Enums
     {
         Draft = 1,
         Generated = 2,
-        Paid = 3,
-        Cancelled = 4
+        Calculated= 3,
+        Approved = 4,
+        Paid = 5,
+        Cancelled = 6
     }
 }

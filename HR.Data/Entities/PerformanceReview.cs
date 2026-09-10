@@ -9,6 +9,8 @@ namespace HR.Data.Entities
 {
     public class PerformanceReview:BaseEntity
     {
+        public int Month { get; set; }
+        public int Year { get; set; }
         public DateTime ReviewDate { get; set; }
 
         public decimal Score { get; set; }
