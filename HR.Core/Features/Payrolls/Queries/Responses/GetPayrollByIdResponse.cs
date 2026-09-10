@@ -1,4 +1,4 @@
-﻿using HR.Data.Entities.Common;
+﻿using HR.Data.Entities;
 using HR.Data.Enums;
 using System;
 using System.Collections.Generic;
@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HR.Data.Entities
+namespace HR.Core.Features.Payrolls.Queries.Responses
 {
-    public class Payroll: BaseEntity
+    public class GetPayrollByIdResponse
     {
-
+        public int Id { get; set; }
         public int Month { get; set; }
 
         public int Year { get; set; }
@@ -32,9 +32,21 @@ namespace HR.Data.Entities
 
         // Navigation
         public int EmployeeId { get; set; }
-        public Employee Employee { get; set; } = null!;
+        public string EmployeeName { get; set; } 
 
-        public ICollection<PayrollItem> Items { get; set; }
-            = new HashSet<PayrollItem>();
+        public List<PayrollItemResponse> Items { get; set; }
+        
     }
+
+    public class PayrollItemResponse
+    {
+        public string Name { get; set; } 
+
+        public PayrollItemType Type { get; set; }
+
+        public decimal Amount { get; set; }
+
+        public string? Description { get; set; }
+    }
+
 }

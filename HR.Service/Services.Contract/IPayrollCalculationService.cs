@@ -9,11 +9,6 @@ namespace HR.Service.Services.Contract
 {
     public interface IPayrollCalculationService
     {
-        Task<Payroll> CalculateAsync(
-            int employeeId,
-            int month,
-            int year,
-            decimal bonus,
-            decimal deduction);
+        Task<Payroll> CalculateAsync(Employee employee,int month,int year,decimal bonus,decimal deduction);
     }
 }

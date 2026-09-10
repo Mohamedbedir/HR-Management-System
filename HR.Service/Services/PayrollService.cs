@@ -23,6 +23,7 @@ namespace HR.Service.Services
         {
             return await payrollRepo
                 .GetTableNoTracking()
+                .Include(x => x.Employee)
                 .Include(x => x.Items)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
@@ -32,6 +33,7 @@ namespace HR.Service.Services
             return await payrollRepo
                 .GetTableNoTracking()
                 .Include(x => x.Items)
+                .Include(x => x.Employee)
                 .OrderByDescending(x => x.Year)
                 .ThenByDescending(x => x.Month)
                 .ToListAsync();
@@ -42,6 +44,7 @@ namespace HR.Service.Services
             return await payrollRepo
                 .GetTableNoTracking()
                 .Include(x => x.Items)
+                .Include(x => x.Employee)
                 .Where(x => x.EmployeeId == employeeId)
                 .OrderByDescending(x => x.Year)
                 .ThenByDescending(x => x.Month)

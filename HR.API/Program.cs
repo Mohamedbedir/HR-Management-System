@@ -6,10 +6,12 @@ using HR.Infrastructure.DataSeeding;
 using HR.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Globalization;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +35,29 @@ builder.Services.AddDbContext<HRAppDbContext>(options =>
 builder.Services.AddInfrastructureDependencies()
                  .AddServiceDependencies()
                  .AddCoreDependencies();
+
+
+#region RareLimit
+builder.Services.AddRateLimiter(opt =>
+{
+    opt.AddSlidingWindowLimiter("Fixed",opt =>
+    {
+        opt.PermitLimit = 5;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueLimit = 0;
+        opt.SegmentsPerWindow = 1;
+        opt.QueueLimit = 0;
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+    });
+    opt.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.ContentType= "text/plain";
+        await context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.",token);
+    };
+});
+
+#endregion
 
 #region Localization
 builder.Services.AddLocalization(opt =>
@@ -89,7 +114,7 @@ app.UseRequestLocalization(options.Value);
 app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseStaticFiles();
 app.UseHttpsRedirection();
-
+app.UseRateLimiter();
 app.UseAuthorization();
 
 app.MapControllers();
