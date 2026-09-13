@@ -35,6 +35,11 @@
     <Folder Include="Mapping\Histories\CommandMapping\" />
     <Folder Include="Mapping\Attendances\CommandMapping\" />
     <Folder Include="Mapping\LeaveRequests\CommandMapping\" />
+<<<<<<< Updated upstream
+=======
+    <Folder Include="Mapping\Payrolls\CommandMapping\" />
+    <Folder Include="Mapping\Reviews\CommandMapping\" />
+>>>>>>> Stashed changes
     <Folder Include="Mapping\Positions - Copy\CommandMapping\" />
     <Folder Include="Mapping\Positions - Copy\QueryMapping\" />
   </ItemGroup>

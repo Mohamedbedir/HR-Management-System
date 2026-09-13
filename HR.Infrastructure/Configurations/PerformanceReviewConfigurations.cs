@@ -23,7 +23,11 @@ namespace HR.Infrastructure.Configurations
 
             // Score
             builder.Property(x => x.Score)
+<<<<<<< Updated upstream
                 .HasColumnType("decimal(3,2)")
+=======
+                .HasColumnType("decimal(2,1)")
+>>>>>>> Stashed changes
                 .IsRequired();
 
             // Comments

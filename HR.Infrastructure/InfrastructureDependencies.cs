@@ -18,6 +18,12 @@ namespace HR.Infrastructure
             services.AddScoped<ISalaryHistoryRepo, SalaryHistoryRepo>();
             services.AddScoped<IAttendanceRepo, AttendanceRepo>();
             services.AddScoped<ILeaveRequestRepo, LeaveRequestRepo>();
+<<<<<<< Updated upstream
+=======
+            services.AddScoped<IPayrollRepo, PayrollRepo>();
+            services.AddScoped<IPayrollItemRepo, PayrollItemRepo>();
+            services.AddScoped<IPerformanceReviewRepo, PerformanceReviewRepo>();
+>>>>>>> Stashed changes
            //services.AddScoped(typeof(IGenericRepos<>), typeof(GenericRepos<>)); // unitofWork
 
             ////views
