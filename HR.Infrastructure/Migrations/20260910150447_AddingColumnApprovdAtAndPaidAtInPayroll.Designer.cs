@@ -4,6 +4,7 @@ using HR.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HR.Infrastructure.Migrations
 {
     [DbContext(typeof(HRAppDbContext))]
-    partial class HRAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260910150447_AddingColumnApprovdAtAndPaidAtInPayroll")]
+    partial class AddingColumnApprovdAtAndPaidAtInPayroll
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -443,9 +446,6 @@ namespace HR.Infrastructure.Migrations
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Month")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("ReviewDate")
                         .HasColumnType("datetime2");
 
@@ -453,17 +453,13 @@ namespace HR.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Score")
-                        .HasColumnType("decimal(2,1)");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
+                        .HasColumnType("decimal(3,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ReviewerId");
 
-                    b.HasIndex("EmployeeId", "Month", "Year")
-                        .IsUnique();
+                    b.HasIndex("EmployeeId", "ReviewDate");
 
                     b.ToTable("PerformanceReviews");
                 });

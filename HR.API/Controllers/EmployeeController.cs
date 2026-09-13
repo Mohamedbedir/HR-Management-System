@@ -13,6 +13,7 @@ using HR.Data.AppMetaData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using SchoolProject.API.Base;
 
 namespace HR.API.Controllers
@@ -45,6 +46,7 @@ namespace HR.API.Controllers
             return NewResult(response);
         }
 
+        [EnableRateLimiting("Fixed")]
         [HttpGet(Router.EmployeeRouting.List)]
         [ProducesResponseType(typeof(Response<IReadOnlyList<GetEmployeesResponse>>), StatusCodes.Status200OK)]
         public async Task<ActionResult<Response<IReadOnlyList<GetEmployeesResponse>>>> GetEmployeesList()

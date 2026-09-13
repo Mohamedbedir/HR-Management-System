@@ -55,6 +55,12 @@ namespace HR.Infrastructure.Configurations
                 .HasColumnType("datetime2")
                 .IsRequired();
 
+            builder.Property(x => x.ApprovedAt)
+                .HasColumnType("datetime2");
+
+                builder.Property(x => x.PaidAt)
+                .HasColumnType("datetime2");
+
             // Relationship
             builder.HasOne(x => x.Employee)
                 .WithMany()
