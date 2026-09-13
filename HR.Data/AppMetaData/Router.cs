@@ -8,7 +8,10 @@ namespace HR.Data.AppMetaData
 {
     public static class Router
     {
-        public const string root = "Api/";
+        //public const string root = "Api/";
+        //public const string Version = "v1";
+        //public const string Rule = root + "/" + Version + "/";
+        public const string root = "Api";
         public const string Version = "v1";
         public const string Rule = root + "/" + Version + "/";
 
