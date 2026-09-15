@@ -1,4 +1,5 @@
-﻿using HR.Infrastructure.Repositories;
+﻿using HR.Data.Entities.Recruitment;
+using HR.Infrastructure.Repositories;
 using HR.Infrastructure.Repositories.Contract;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,6 +23,10 @@ namespace HR.Infrastructure
             services.AddScoped<IPayrollRepo, PayrollRepo>();
             services.AddScoped<IPayrollItemRepo, PayrollItemRepo>();
             services.AddScoped<IPerformanceReviewRepo, PerformanceReviewRepo>();
+
+            services.AddScoped<IJobPostingRepo, JobPostingRepo>();
+            services.AddScoped<IApplicationRepo, ApplicationRepo>();
+            services.AddScoped<ICandidateRepo, CandidateRepo>();
 
            //services.AddScoped(typeof(IGenericRepos<>), typeof(GenericRepos<>)); // unitofWork
 

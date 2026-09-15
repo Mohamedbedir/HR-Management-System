@@ -17,11 +17,13 @@ namespace HR.Service
             services.AddScoped<ISalaryHistoryService, SalaryHistoryService>();
             services.AddScoped<IAttendanceService, AttendanceService>();
             services.AddScoped<ILeaveRequestService, LeaveRequestService>();
-
             services.AddScoped<IPayrollService, PayrollService>();
             services.AddScoped<IPayrollCalculationService, PayrollCalculationService>();
             services.AddScoped<IPerformanceReviewService, PerformanceReviewService>();
 
+            services.AddScoped<IJobPostingService, JobPostingService>();
+            services.AddScoped<IApplicationService, ApplicationService>();
+            services.AddScoped<ICandidateService, CandidateService>();
 
             services.AddTransient<IFileService, FileService>();
             return services;
