@@ -9,6 +9,7 @@ using HR.Core.Features.JobPostings.Commands.Models;
 using HR.Core.Features.JobPostings.Queries.Models;
 using HR.Core.Features.JobPostings.Queries.Responses;
 using HR.Data.AppMetaData;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ namespace HR.API.Controllers
     [ApiController]
     public class ApplicationController : AppControllerBase
     {
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Recruiter}")]
         [HttpGet(Router.ApplicationRouting.ById)]
         [ProducesResponseType(typeof(Response<GetApplicationByIdResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFound<GetApplicationByIdResponse>), StatusCodes.Status404NotFound)]
@@ -27,6 +29,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new GetApplicationByIdQuery(id));
             return NewResult(response);
         }
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Recruiter}")]
         [HttpGet(Router.ApplicationRouting.List)]
         [ProducesResponseType(typeof(Response<IReadOnlyList<GetApplicationsResponse>>), StatusCodes.Status200OK)]
         public async Task<ActionResult<Response<IReadOnlyList<GetApplicationsResponse>>>> GetApplicationsList()
@@ -34,7 +37,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new GetApplicationsQuery());
             return NewResult(response);
         }
-
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Recruiter}")]
         [HttpPost(Router.ApplicationRouting.Create)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status422UnprocessableEntity)]
@@ -44,6 +47,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(model);
             return NewResult(response);
         }
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Recruiter}")]
         [HttpPut(Router.ApplicationRouting.Update)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
@@ -55,7 +59,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(model);
             return NewResult(response);
         }
-
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Recruiter}")]
         [HttpDelete(Router.ApplicationRouting.Delete)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]

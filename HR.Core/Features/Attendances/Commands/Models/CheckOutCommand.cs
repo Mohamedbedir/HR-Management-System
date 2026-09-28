@@ -10,12 +10,12 @@ namespace HR.Core.Features.Attendances.Commands.Models
 {
     public class CheckOutCommand:IRequest<Response<string>>
     {
-        public int EmployeeId { get; set; }
+        //public int EmployeeId { get; set; }
 
-        public CheckOutCommand(int id)
-        {
-            EmployeeId=id;
-        }
+        //public CheckOutCommand(int id)
+        //{
+        //    EmployeeId=id;
+        //}
 
     }
 }

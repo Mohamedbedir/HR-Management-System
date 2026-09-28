@@ -8,8 +8,11 @@ using System.Threading.Tasks;
 
 namespace HR.Core.Features.Attendances.Commands.Models
 {
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+
     public class CheckInCommand : IRequest<Response<string>>
     {
+        [BindNever]
         public int EmployeeId { get; set; }
         public string Notes { get; set; }
         //public CheckInCommand(int id,string notes)

@@ -12,9 +12,11 @@ namespace HR.Core.Features.Attendances.Commands.Validators
     {
         public CheckInCommandValidator()
         {
+            // EmployeeId will be supplied from the current user service when absent from the request
             RuleFor(x => x.EmployeeId)
                 .GreaterThan(0)
-                .WithMessage("EmployeeId must be greater than 0.");
+                .WithMessage("EmployeeId must be greater than 0.")
+                .When(x => x.EmployeeId != 0);
         }
     }
 }

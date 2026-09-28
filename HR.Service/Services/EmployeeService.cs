@@ -26,6 +26,16 @@ namespace HR.Service.Services
             this.employmentHistoryRepo = employmentHistoryRepo;
             this.salaryHistoryRepo = salaryHistoryRepo;
         }
+
+        public async Task<bool> IsEmployeeUnderManagerAsync(int employeeId,int managerId)
+        {
+            var employee = await employeeRepo.GetByIdAsync(employeeId);
+
+            if (employee is null)
+                return false;
+
+            return employee.ManagerId == managerId;
+        }
         public async Task<string> AddEmployeeAsync(Employee employee)
         {
             var transaction = employeeRepo.BeginTransactionAsync();

@@ -57,6 +57,15 @@ namespace HR.Core.Bases
                 Message = "UnAuthorized"
             };
         }
+        public Response<T> Forbidden<T>()
+        {
+            return new Response<T>()
+            {
+                StatusCode = System.Net.HttpStatusCode.Forbidden,
+                Succeeded = true,
+                Message = "Forbidden"
+            };
+        }
         public Response<T> UnprocessableEntity<T>(string Message = null)
         {
             return new Response<T>()

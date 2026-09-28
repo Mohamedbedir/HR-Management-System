@@ -66,8 +66,8 @@ namespace HR.Data.AppMetaData
             public const string Prefix = Rule+ "Attendances";
             public const string List = Prefix+"";
             public const string Paginated = Prefix+ "";
-            public const string ForEmployee = Prefix + ""+ "/{EmployeeId}";
-            public const string ForEmployeeByDate = Prefix + "/ByDate"+ "/{EmployeeId}";
+            public const string ForEmployee = Prefix + "";
+            public const string ForEmployeeByDate = Prefix + "/ByDate";
             public const string ById = Prefix + ""+ "/{id}";
             public const string Create = Prefix + "";
             public const string CheckIn = Prefix + "/CheckIn";
@@ -188,7 +188,8 @@ namespace HR.Data.AppMetaData
         {
             public const string Prefix = Rule+ "Account";
             public const string List = Prefix+"/List";
-            public const string SignIn = Prefix + "/SignIn";
+            public const string LogIn = Prefix + "/LogIn";
+            public const string Register = Prefix + "/Register";
             public const string RefreshToken = Prefix + "/Refresh-Token";
             public const string ValidateToken = Prefix + "/Validate-Token";
             public const string ConfirmEmail = Prefix + "/ConfirmEmail";

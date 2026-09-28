@@ -1,6 +1,8 @@
 ﻿using HR.Data.Entities;
 using HR.Data.Entities.Common;
 using HR.Data.Entities.Recruitment;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace HR.Infrastructure.Contexts
 {
-    public class HRAppDbContext :DbContext
+    public class HRAppDbContext :IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
         public HRAppDbContext(DbContextOptions<HRAppDbContext> options):base(options)
         {
