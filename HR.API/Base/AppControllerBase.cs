@@ -24,6 +24,9 @@ namespace SchoolProject.API.Base
                     return new CreatedResult(string.Empty, response);
                 case HttpStatusCode.Unauthorized:
                     return new UnauthorizedObjectResult(response);
+                case HttpStatusCode.Forbidden:
+                    // There is no ForbiddenObjectResult in ASP.NET Core; return an ObjectResult with 403 status
+                    return new ObjectResult(response) { StatusCode = (int)HttpStatusCode.Forbidden };
                 case HttpStatusCode.BadRequest:
                     return new BadRequestObjectResult(response);
                 case HttpStatusCode.Conflict:

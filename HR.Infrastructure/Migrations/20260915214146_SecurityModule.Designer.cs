@@ -4,6 +4,7 @@ using HR.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HR.Infrastructure.Migrations
 {
     [DbContext(typeof(HRAppDbContext))]
-    partial class HRAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260915214146_SecurityModule")]
+    partial class SecurityModule
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,9 +85,7 @@ namespace HR.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique()
-                        .HasFilter("[EmployeeId] IS NOT NULL");
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -870,9 +871,8 @@ namespace HR.Infrastructure.Migrations
             modelBuilder.Entity("HR.Data.Entities.ApplicationUser", b =>
                 {
                     b.HasOne("HR.Data.Entities.Employee", "Employee")
-                        .WithOne()
-                        .HasForeignKey("HR.Data.Entities.ApplicationUser", "EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany()
+                        .HasForeignKey("EmployeeId");
 
                     b.Navigation("Employee");
                 });

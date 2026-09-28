@@ -3,6 +3,7 @@ using HR.Core.Features.Attendances.Commands.Models;
 using HR.Core.Localization;
 using HR.Data.Entities;
 using HR.Data.Enums;
+using HR.Service.Services;
 using HR.Service.Services.Contract;
 using MediatR;
 using Microsoft.Extensions.Localization;
@@ -21,22 +22,26 @@ namespace HR.Core.Features.Attendances.Commands.Handlers
     {
         private readonly IStringLocalizer<SharedResources> localizer;
         private readonly IEmployeeService employeeService;
+        private readonly ICurrentUserService currentUserService;
         private readonly IAttendanceService attendanceService;
 
         public AttendenceCommandHandler(IStringLocalizer<SharedResources> localizer,
             IEmployeeService employeeService,
+            ICurrentUserService currentUserService,
             IAttendanceService attendanceService):base(localizer)
         {
             this.localizer = localizer;
             this.employeeService = employeeService;
+            this.currentUserService = currentUserService;
             this.attendanceService = attendanceService;
         }
 
         public async Task<Response<string>> Handle(CheckInCommand request,
             CancellationToken cancellationToken)
         {
+            int EmployeeId = currentUserService.EmployeeId.Value;
             // 1. Get Employee
-            var employee = await employeeService.GetEmployeeByIdAsync(request.EmployeeId);
+            var employee = await employeeService.GetEmployeeByIdAsync(EmployeeId);
 
             if (employee == null)
                 return NotFound<string>("Employee not found.");
@@ -54,7 +59,7 @@ namespace HR.Core.Features.Attendances.Commands.Handlers
             // 4. Check if attendance already exists today
             var existingAttendance =
                 await attendanceService.GetEmployeeAttendanceByDateAsync(
-                    request.EmployeeId,
+                    EmployeeId,
                     today);
 
             if (existingAttendance != null)
@@ -74,7 +79,7 @@ namespace HR.Core.Features.Attendances.Commands.Handlers
             // 5. Create Attendance
             var attendance = new Attendance
             {
-                EmployeeId = request.EmployeeId,
+                EmployeeId = EmployeeId,
                 Date = today,
                 CheckIn = currentTime,
                 Status = status,
@@ -95,8 +100,9 @@ namespace HR.Core.Features.Attendances.Commands.Handlers
         public async Task<Response<string>> Handle( CheckOutCommand request,
             CancellationToken cancellationToken)
         {
+            int EmployeeId = currentUserService.EmployeeId.Value;
             // 1. Check Employee
-            var employee = await employeeService.GetEmployeeByIdAsync(request.EmployeeId);
+            var employee = await employeeService.GetEmployeeByIdAsync(EmployeeId);
 
             if (employee == null)
                 return NotFound<string>("Employee not found.");
@@ -110,7 +116,7 @@ namespace HR.Core.Features.Attendances.Commands.Handlers
 
             var attendance =
                 await attendanceService.GetEmployeeAttendanceByDateAsync(
-                    request.EmployeeId,
+                    EmployeeId,
                     today);
 
             if (attendance == null)

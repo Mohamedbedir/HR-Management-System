@@ -23,6 +23,8 @@ namespace HR.Service.Services.Contract
 
         Task<IReadOnlyList<Employee>> GetEmployeesAsync();
 
+        Task<bool> IsEmployeeUnderManagerAsync(int employeeId,int managerId);
+
         Task<string> AddEmployeeAsync(Employee employee);
 
         Task<string> UpdateEmployeeAsync(Employee employee);

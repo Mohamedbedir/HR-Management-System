@@ -1,5 +1,7 @@
-﻿using HR.Data.Entities;
+﻿using HR.Data.AppMetaData;
+using HR.Data.Entities;
 using HR.Infrastructure.Contexts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -173,5 +175,31 @@ namespace HR.Infrastructure.DataSeeding
             }
 
                     }
+
+        public static async Task SeedRolesAsync(RoleManager<IdentityRole<int>> roleManager)
+        {
+            var roles = new[]
+            {
+            Roles.Admin,
+            Roles.HR,
+            Roles.Manager,
+            Roles.Employee,
+            Roles.Recruiter
+        };
+
+            foreach (var role in roles)
+            {
+                var roleExists = await roleManager.RoleExistsAsync(role);
+
+                if (!roleExists)
+                {
+                    await roleManager.CreateAsync(
+                        new IdentityRole<int>
+                        {
+                            Name = role
+                        });
+                }
+            }
+        }
     }
 }

@@ -26,6 +26,15 @@ namespace HR.Service
             services.AddScoped<ICandidateService, CandidateService>();
 
             services.AddTransient<IFileService, FileService>();
+
+            services.AddScoped<IAuthService, AuthService>();
+
+            services.AddScoped<IJwtService, JwtService>();
+
+            services.AddHttpContextAccessor();
+
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+
             return services;
         }
 
