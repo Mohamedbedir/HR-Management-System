@@ -12,9 +12,9 @@ namespace HR.Core.Features.LeaveRequests.Commands.Validators
     {
         public CreateLeaveRequestValidator()
         {
-            RuleFor(x => x.EmployeeId)
-                .GreaterThan(0)
-                .WithMessage("EmployeeId must be greater than 0.");
+            //RuleFor(x => x.EmployeeId)
+            //    .GreaterThan(0)
+            //    .WithMessage("EmployeeId must be greater than 0.");
 
             RuleFor(x => x.LeaveTypeId)
                 .GreaterThan(0)

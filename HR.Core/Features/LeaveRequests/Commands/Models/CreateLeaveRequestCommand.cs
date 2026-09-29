@@ -10,7 +10,7 @@ namespace HR.Core.Features.LeaveRequests.Commands.Models
 {
     public class CreateLeaveRequestCommand : IRequest<Response<string>>
     {
-        public int EmployeeId { get; set; }
+        //public int EmployeeId { get; set; }
 
         public int LeaveTypeId { get; set; }
 

@@ -10,6 +10,10 @@ using HR.Core.Features.Employees.Queries.Responses;
 using HR.Core.Features.Histories.Queries.Models;
 using HR.Core.Features.Histories.Queries.Responses;
 using HR.Data.AppMetaData;
+using HR.Data.Entities;
+using HR.Service.Services;
+using HR.Service.Services.Contract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -21,14 +25,26 @@ namespace HR.API.Controllers
     [ApiController]
     public class EmployeeController : AppControllerBase
     {
+        private readonly ICurrentUserService currentUserService;
+
+        public EmployeeController(ICurrentUserService currentUserService)
+        {
+            this.currentUserService = currentUserService;
+        }
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Manager},{Roles.Employee}")]
         [HttpGet(Router.EmployeeRouting.ById)]
         [ProducesResponseType(typeof(Response<GetEmployeeByIdResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFound<GetEmployeeByIdResponse>), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Response<GetEmployeeByIdResponse>>> GetEmployeeById([FromRoute] int id)
+        public async Task<ActionResult<Response<GetEmployeeByIdResponse>>> GetEmployeeById([FromRoute] int? id)
         {
+            if (id <= 0 && currentUserService.EmployeeId.HasValue)
+            {
+                id = currentUserService.EmployeeId.Value;
+            }
             var response = await mediator.Send(new GetEmployeeByIdQuery(id));
             return NewResult(response);
         }
+        [Authorize(Roles =$"{Roles.Admin},{Roles.HR},{Roles.Manager},{Roles.Employee}")]
         [HttpGet(Router.EmployeeRouting.EmploymentHistory)]
         [ProducesResponseType(typeof(Response<List<GetHistoryForEmployeeResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFound<List<GetHistoryForEmployeeResponse>>), StatusCodes.Status404NotFound)]
@@ -37,6 +53,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new GetHistoryForEmployeeQuery(employeeId));
             return NewResult(response);
         }
+        [Authorize(Roles =$"{Roles.Admin},{Roles.HR}")]
         [HttpGet(Router.EmployeeRouting.SalaryHistory)]
         [ProducesResponseType(typeof(Response<List<GetSalaryHistoryForEmployeeResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFound<List<GetSalaryHistoryForEmployeeResponse>>), StatusCodes.Status404NotFound)]
@@ -45,7 +62,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new GetSalaryHistoryForEmployeeQuery(employeeId));
             return NewResult(response);
         }
-
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
         [EnableRateLimiting("Fixed")]
         [HttpGet(Router.EmployeeRouting.List)]
         [ProducesResponseType(typeof(Response<IReadOnlyList<GetEmployeesResponse>>), StatusCodes.Status200OK)]
@@ -54,7 +71,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new GetEmployeesQuery());
             return NewResult(response);
         }
-
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
         [HttpPost(Router.EmployeeRouting.Create)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status422UnprocessableEntity)]
@@ -64,6 +81,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(model);
             return NewResult(response);
         }
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
         [HttpPut(Router.EmployeeRouting.Update)]
         [ProducesResponseType(typeof(Response<string>),StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>),StatusCodes.Status404NotFound)]
@@ -77,7 +95,7 @@ namespace HR.API.Controllers
 
             return NewResult(response);
         }
-
+        [Authorize(Roles = Roles.Admin)]
         [HttpDelete(Router.EmployeeRouting.Delete)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]

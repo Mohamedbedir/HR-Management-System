@@ -3,6 +3,7 @@ using HR.Core.Features.Departments.Commands.Models;
 using HR.Core.Features.Departments.Queries.Models;
 using HR.Core.Features.Departments.Queries.Responses;
 using HR.Data.AppMetaData;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using SchoolProject.API.Base;
 
 namespace HR.API.Controllers
 {
+    [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
     //[Route("api/[controller]")]
     [ApiController]
     public class DepartmentController : AppControllerBase

@@ -6,6 +6,8 @@ using HR.Core.Features.LeaveRequests.Commands.Models;
 using HR.Core.Features.LeaveRequests.Queries.Models;
 using HR.Core.Features.LeaveRequests.Queries.Responses;
 using HR.Data.AppMetaData;
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +18,7 @@ namespace HR.API.Controllers
     [ApiController]
     public class LeaveRequestController : AppControllerBase
     {
-
+        [Authorize(Roles =$"{Roles.Admin},{Roles.HR},{Roles.Manager},{Roles.Employee}")]
         [HttpGet(Router.LeaveRequestRouting.ById)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
@@ -25,6 +27,8 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new GetLeaveRequestByIdQuery(id));
             return NewResult(response);
         }
+
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Manager},{Roles.Employee}")]
         [HttpGet(Router.LeaveRequestRouting.ForEmployee)]
         [ProducesResponseType(typeof(Response<List<GetLeaveRequestsForEmployeeRespose>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFound<List<GetLeaveRequestsForEmployeeRespose>>), StatusCodes.Status404NotFound)]
@@ -34,6 +38,8 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new GetLeaveRequestsForEmployeeQuery(EmployeeId));
             return NewResult(response);
         }
+
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
         [HttpGet(Router.LeaveRequestRouting.List)]
         [ProducesResponseType(typeof(Response<List<GetLeaveRequestsRespose>>), StatusCodes.Status200OK)]
         public async Task<ActionResult<Response<List<GetLeaveRequestsRespose>>>>
@@ -42,6 +48,8 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new GetLeaveRequestsQuery());
             return NewResult(response);
         }
+
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Manager},{Roles.Employee}")]
         [HttpPost(Router.LeaveRequestRouting.Create)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
@@ -52,6 +60,8 @@ namespace HR.API.Controllers
             var response = await mediator.Send(command);
             return NewResult(response);
         }
+
+        [Authorize(Roles =$"{Roles.Admin},{Roles.HR},{Roles.Manager}")]
         [HttpPut(Router.LeaveRequestRouting.Approve)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
@@ -61,6 +71,8 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new ApproveLeaveRequestCommand(LeaveRequestId));
             return NewResult(response);
         }
+
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Manager}")]
         [HttpPut(Router.LeaveRequestRouting.Reject)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
@@ -71,6 +83,8 @@ namespace HR.API.Controllers
             var response = await mediator.Send(command);
             return NewResult(response);
         }
+
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Manager},{Roles.Employee}")]
         [HttpPut(Router.LeaveRequestRouting.Cancel)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]

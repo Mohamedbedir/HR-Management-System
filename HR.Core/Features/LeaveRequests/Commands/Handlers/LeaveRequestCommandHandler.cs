@@ -2,6 +2,7 @@
 using HR.Core.Features.LeaveRequests.Commands.Models;
 using HR.Data.Entities;
 using HR.Data.Enums;
+using HR.Data.AppMetaData;
 using HR.Service.Services.Contract;
 using MediatR;
 using Microsoft.Extensions.Localization;
@@ -24,15 +25,18 @@ namespace HR.Core.Features.LeaveRequests.Commands.Handlers
         private readonly IEmployeeService employeeService;
         private readonly ILeaveTypeService leaveTypeService;
         private readonly ILeaveRequestService leaveRequestService;
+        private readonly ICurrentUserService currentUserService;
 
         public LeaveRequestCommandHandler(IStringLocalizer<SharedResources> localizer,
             IEmployeeService employeeService,
             ILeaveTypeService leaveTypeService,
-            ILeaveRequestService leaveRequestService) : base(localizer)
+            ILeaveRequestService leaveRequestService,
+            ICurrentUserService currentUserService) : base(localizer)
         {
             this.employeeService = employeeService;
             this.leaveTypeService = leaveTypeService;
             this.leaveRequestService = leaveRequestService;
+            this.currentUserService = currentUserService;
         }
 
        
@@ -40,9 +44,14 @@ namespace HR.Core.Features.LeaveRequests.Commands.Handlers
         public async Task<Response<string>> Handle(CreateLeaveRequestCommand request,
             CancellationToken cancellationToken)
         {
+            // For Create, take EmployeeId from current user (ignore model)
+            if (!currentUserService.EmployeeId.HasValue)
+                return Forbidden<string>();
+
+            int effectiveEmployeeId = currentUserService.EmployeeId.Value;
+
             // 1. Check Employee
-            var employee =
-                await employeeService.GetEmployeeByIdAsync(request.EmployeeId);
+            var employee = await employeeService.GetEmployeeByIdAsync(effectiveEmployeeId);
 
             if (employee == null)
                 return NotFound<string>("Employee not found.");
@@ -61,13 +70,37 @@ namespace HR.Core.Features.LeaveRequests.Commands.Handlers
             // 4. Check overlapping requests
             var isOverlapping =
                 await leaveRequestService.IsOverlappingLeaveRequestAsync(
-                    request.EmployeeId,
+                    effectiveEmployeeId,
                     request.StartDate,
                     request.EndDate);
 
             if (isOverlapping)
                 return Conflict<string>(
                     "Employee already has a leave request for this period.");
+
+            // Authorization: Admin/HR can create for any; Manager can create for subordinates; Employee only for self
+            if (currentUserService.IsInRole(Roles.Admin) || currentUserService.IsInRole(Roles.HR))
+            {
+                // allowed
+            }
+            else if (currentUserService.IsInRole(Roles.Manager) && !currentUserService.IsInRole(Roles.Employee))
+            {
+                if (!currentUserService.EmployeeId.HasValue)
+                    return Forbidden<string>();
+
+                var isSub = await employeeService.IsEmployeeUnderManagerAsync(effectiveEmployeeId, currentUserService.EmployeeId.Value);
+                if (!isSub)
+                    return Forbidden<string>();
+            }
+            else if (currentUserService.IsInRole(Roles.Employee))
+            {
+                if (!currentUserService.EmployeeId.HasValue || currentUserService.EmployeeId.Value != effectiveEmployeeId)
+                    return Forbidden<string>();
+            }
+            else
+            {
+                return Forbidden<string>();
+            }
 
             // 5. Calculate number of leave days
             var leaveDays =
@@ -76,7 +109,7 @@ namespace HR.Core.Features.LeaveRequests.Commands.Handlers
             // 6. Create Leave Request
             var leaveRequest = new LeaveRequest
             {
-                EmployeeId = request.EmployeeId,
+                EmployeeId = effectiveEmployeeId,
                 LeaveTypeId = request.LeaveTypeId,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
@@ -108,9 +141,29 @@ namespace HR.Core.Features.LeaveRequests.Commands.Handlers
                 return BadRequest<string>(
                     "Only pending leave requests can be approved.");
 
+            // Authorization: Admin/HR can approve any; Manager only for subordinates
+            if (currentUserService.IsInRole(Roles.Admin) || currentUserService.IsInRole(Roles.HR))
+            {
+                // allowed
+            }
+            else if (currentUserService.IsInRole(Roles.Manager) && !currentUserService.IsInRole(Roles.Employee))
+            {
+                if (!currentUserService.EmployeeId.HasValue)
+                    return Forbidden<string>();
+
+                var isSub = await employeeService.IsEmployeeUnderManagerAsync(leaveRequest.EmployeeId, currentUserService.EmployeeId.Value);
+                if (!isSub)
+                    return Forbidden<string>();
+            }
+            else
+            {
+                return Forbidden<string>();
+            }
+
             leaveRequest.Status = LeaveRequestStatus.Approved;
             leaveRequest.ApprovedAt = DateTime.Now;
-            leaveRequest.ApprovedById = 7;
+            // set ApprovedById from current user if available
+            leaveRequest.ApprovedById = currentUserService.UserId ?? 0;
 
             await leaveRequestService.UpdateAsync(leaveRequest);
             await leaveRequestService.SaveChangesAsync();
@@ -127,9 +180,29 @@ namespace HR.Core.Features.LeaveRequests.Commands.Handlers
             if (leaveRequest == null)
                 return NotFound<string>("Leave request not found.");
 
+
             if (leaveRequest.Status != LeaveRequestStatus.Pending)
                 return BadRequest<string>(
                     "Only pending leave requests can be rejected.");
+
+            // Authorization: Admin/HR can reject any; Manager only for subordinates
+            if (currentUserService.IsInRole(Roles.Admin) || currentUserService.IsInRole(Roles.HR))
+            {
+                // allowed
+            }
+            else if (currentUserService.IsInRole(Roles.Manager) && !currentUserService.IsInRole(Roles.Employee))
+            {
+                if (!currentUserService.EmployeeId.HasValue)
+                    return Forbidden<string>();
+
+                var isSub = await employeeService.IsEmployeeUnderManagerAsync(leaveRequest.EmployeeId, currentUserService.EmployeeId.Value);
+                if (!isSub)
+                    return Forbidden<string>();
+            }
+            else
+            {
+                return Forbidden<string>();
+            }
 
             leaveRequest.Status = LeaveRequestStatus.Rejected;
             leaveRequest.RejectionReason = request.RejectionReason;
@@ -152,6 +225,30 @@ namespace HR.Core.Features.LeaveRequests.Commands.Handlers
             if (leaveRequest.Status != LeaveRequestStatus.Pending)
                 return BadRequest<string>(
                     "Only pending leave requests can be cancelled.");
+
+            // Authorization: Admin/HR can cancel any; Manager only subordinates; Employee only own
+            if (currentUserService.IsInRole(Roles.Admin) || currentUserService.IsInRole(Roles.HR))
+            {
+                // allowed
+            }
+            else if (currentUserService.IsInRole(Roles.Manager) && !currentUserService.IsInRole(Roles.Employee))
+            {
+                if (!currentUserService.EmployeeId.HasValue)
+                    return Forbidden<string>();
+
+                var isSub = await employeeService.IsEmployeeUnderManagerAsync(leaveRequest.EmployeeId, currentUserService.EmployeeId.Value);
+                if (!isSub)
+                    return Forbidden<string>();
+            }
+            else if (currentUserService.IsInRole(Roles.Employee))
+            {
+                if (!currentUserService.EmployeeId.HasValue || currentUserService.EmployeeId.Value != leaveRequest.EmployeeId)
+                    return Forbidden<string>();
+            }
+            else
+            {
+                return Forbidden<string>();
+            }
 
             leaveRequest.Status = LeaveRequestStatus.Cancelled;
 
