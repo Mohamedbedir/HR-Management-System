@@ -6,6 +6,7 @@ using HR.Core.Features.JobPostings.Commands.Models;
 using HR.Core.Features.JobPostings.Queries.Models;
 using HR.Core.Features.JobPostings.Queries.Responses;
 using HR.Data.AppMetaData;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ using SchoolProject.API.Base;
 namespace HR.API.Controllers
 {
     [ApiController]
+    [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Recruiter}")]
     public class JobPostingController : AppControllerBase
     {
         [HttpGet(Router.JobPostingRouting.ById)]

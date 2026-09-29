@@ -11,8 +11,8 @@ namespace HR.Core.Features.Employees.Queries.Models
 {
     public class GetEmployeeByIdQuery:IRequest<Response<GetEmployeeByIdResponse>>
     {
-        public int Id { get; set; }
-        public GetEmployeeByIdQuery(int id)
+        public int? Id { get; set; }
+        public GetEmployeeByIdQuery(int? id)
         {
             Id = id;
         }
