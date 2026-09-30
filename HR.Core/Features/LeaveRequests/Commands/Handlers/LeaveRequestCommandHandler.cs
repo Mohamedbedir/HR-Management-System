@@ -46,7 +46,7 @@ namespace HR.Core.Features.LeaveRequests.Commands.Handlers
         {
             // For Create, take EmployeeId from current user (ignore model)
             if (!currentUserService.EmployeeId.HasValue)
-                return Forbidden<string>();
+                return Forbidden<string>("You are not allowed to create this leave request.");
 
             int effectiveEmployeeId = currentUserService.EmployeeId.Value;
 
@@ -86,20 +86,20 @@ namespace HR.Core.Features.LeaveRequests.Commands.Handlers
             else if (currentUserService.IsInRole(Roles.Manager) && !currentUserService.IsInRole(Roles.Employee))
             {
                 if (!currentUserService.EmployeeId.HasValue)
-                    return Forbidden<string>();
+                    return Forbidden<string>("You are not allowed to create this leave request.");
 
                 var isSub = await employeeService.IsEmployeeUnderManagerAsync(effectiveEmployeeId, currentUserService.EmployeeId.Value);
                 if (!isSub)
-                    return Forbidden<string>();
+                    return Forbidden<string>("You are not allowed to create this leave request.");
             }
             else if (currentUserService.IsInRole(Roles.Employee))
             {
                 if (!currentUserService.EmployeeId.HasValue || currentUserService.EmployeeId.Value != effectiveEmployeeId)
-                    return Forbidden<string>();
+                    return Forbidden<string>("You are not allowed to create this leave request.");
             }
             else
             {
-                return Forbidden<string>();
+                return Forbidden<string>("You are not allowed to create this leave request.");
             }
 
             // 5. Calculate number of leave days
@@ -149,15 +149,15 @@ namespace HR.Core.Features.LeaveRequests.Commands.Handlers
             else if (currentUserService.IsInRole(Roles.Manager) && !currentUserService.IsInRole(Roles.Employee))
             {
                 if (!currentUserService.EmployeeId.HasValue)
-                    return Forbidden<string>();
+                    return Forbidden<string>("You are not allowed to approve this leave request.");
 
                 var isSub = await employeeService.IsEmployeeUnderManagerAsync(leaveRequest.EmployeeId, currentUserService.EmployeeId.Value);
                 if (!isSub)
-                    return Forbidden<string>();
+                    return Forbidden<string>("You are not allowed to approve this leave request.");
             }
             else
             {
-                return Forbidden<string>();
+                return Forbidden<string>("You are not allowed to approve this leave request.");
             }
 
             leaveRequest.Status = LeaveRequestStatus.Approved;
@@ -193,15 +193,15 @@ namespace HR.Core.Features.LeaveRequests.Commands.Handlers
             else if (currentUserService.IsInRole(Roles.Manager) && !currentUserService.IsInRole(Roles.Employee))
             {
                 if (!currentUserService.EmployeeId.HasValue)
-                    return Forbidden<string>();
+                    return Forbidden<string>("You are not allowed to reject this leave request.");
 
                 var isSub = await employeeService.IsEmployeeUnderManagerAsync(leaveRequest.EmployeeId, currentUserService.EmployeeId.Value);
                 if (!isSub)
-                    return Forbidden<string>();
+                    return Forbidden<string>("You are not allowed to reject this leave request.");
             }
             else
             {
-                return Forbidden<string>();
+                return Forbidden<string>("You are not allowed to reject this leave request.");
             }
 
             leaveRequest.Status = LeaveRequestStatus.Rejected;
@@ -234,20 +234,20 @@ namespace HR.Core.Features.LeaveRequests.Commands.Handlers
             else if (currentUserService.IsInRole(Roles.Manager) && !currentUserService.IsInRole(Roles.Employee))
             {
                 if (!currentUserService.EmployeeId.HasValue)
-                    return Forbidden<string>();
+                    return Forbidden<string>("You are not allowed to cancel this leave request.");
 
                 var isSub = await employeeService.IsEmployeeUnderManagerAsync(leaveRequest.EmployeeId, currentUserService.EmployeeId.Value);
                 if (!isSub)
-                    return Forbidden<string>();
+                    return Forbidden<string>("You are not allowed to cancel this leave request.");
             }
             else if (currentUserService.IsInRole(Roles.Employee))
             {
                 if (!currentUserService.EmployeeId.HasValue || currentUserService.EmployeeId.Value != leaveRequest.EmployeeId)
-                    return Forbidden<string>();
+                    return Forbidden<string>("You are not allowed to cancel this leave request.");
             }
             else
             {
-                return Forbidden<string>();
+                return Forbidden<string>("You are not allowed to cancel this leave request.");
             }
 
             leaveRequest.Status = LeaveRequestStatus.Cancelled;

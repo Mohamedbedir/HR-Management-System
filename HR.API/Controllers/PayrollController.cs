@@ -8,6 +8,7 @@ using HR.Core.Features.Payrolls.Commands.Models;
 using HR.Core.Features.Payrolls.Queries.Models;
 using HR.Core.Features.Payrolls.Queries.Responses;
 using HR.Data.AppMetaData;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,7 @@ namespace HR.API.Controllers
     [ApiController]
     public class PayrollController : AppControllerBase
     {
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
         [HttpGet(Router.PayrollRouting.ById)]
         [ProducesResponseType(typeof(Response<GetPayrollByIdResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFound<GetPayrollByIdResponse>), StatusCodes.Status404NotFound)]
@@ -26,6 +28,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new GetPayrollByIdQuery(id));
             return NewResult(response);
         }
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
         [HttpGet(Router.PayrollRouting.List)]
         [ProducesResponseType(typeof(Response<List<GetPayrollsResponse>>), StatusCodes.Status200OK)]
         public async Task<ActionResult<Response<GetPayrollByIdResponse>>> GetPayrolls()
@@ -33,6 +36,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new GetPayrollsQuery());
             return NewResult(response);
         }
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
         [HttpGet(Router.PayrollRouting.ForEmployee)]
         [ProducesResponseType(typeof(Response<List<GetPayrollsForEmployeeResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFound<List<GetPayrollsForEmployeeResponse>>), StatusCodes.Status404NotFound)]
@@ -42,6 +46,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new GetPayrollsForEmployeeQuery(EmployeeId));
             return NewResult(response);
         }
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
         [HttpPost(Router.PayrollRouting.Calculate)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
@@ -52,7 +57,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(command);
             return NewResult(response);
         }
-
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
         [HttpPut(Router.PayrollRouting.Approve)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
@@ -62,6 +67,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(command);
             return NewResult(response);
         }
+        [Authorize(Roles = $"{Roles.Admin}")]
         [HttpPut(Router.PayrollRouting.Pay)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
@@ -72,6 +78,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(command);
             return NewResult(response);
         }
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
         [HttpPut(Router.PayrollRouting.Cancel)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]

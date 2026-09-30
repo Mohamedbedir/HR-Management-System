@@ -12,8 +12,6 @@ namespace HR.Core.Features.PerformanceReviews.Commands.Models
     {
         public int EmployeeId { get; set; }
 
-        public int ReviewerId { get; set; }
-
         public int Month { get; set; }
 
         public int Year { get; set; }

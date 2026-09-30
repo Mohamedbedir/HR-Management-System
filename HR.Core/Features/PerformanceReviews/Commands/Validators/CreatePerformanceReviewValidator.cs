@@ -16,8 +16,8 @@ namespace HR.Core.Features.PerformanceReviews.Commands.Validators
             RuleFor(x => x.EmployeeId)
                 .GreaterThan(0);
 
-            RuleFor(x => x.ReviewerId)
-                .GreaterThan(0);
+            //RuleFor(x => x.ReviewerId)
+            //    .GreaterThan(0);
 
             RuleFor(x => x.Month)
                 .InclusiveBetween(1, 12);

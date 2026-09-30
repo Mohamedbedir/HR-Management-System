@@ -79,7 +79,7 @@ namespace HR.Core.Features.Employees.Queries.Handlers
                         currentEmployeeId.Value);
 
                 if (!isSubordinate)
-                    return Forbidden<GetEmployeeByIdResponse>();
+                    return Forbidden<GetEmployeeByIdResponse>("You are not allowed to view this employee's record.");
 
                 var Emp_Mapped = mapper.Map<GetEmployeeByIdResponse>(Emp);
                 return Success(Emp_Mapped);
