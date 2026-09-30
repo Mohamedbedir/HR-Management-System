@@ -13,5 +13,8 @@ namespace HR.Data.Entities
 
         // Navigation
         public Employee? Employee { get; set; }
+
+        public ICollection<RefreshToken> RefreshTokens { get; set; }
+       = new HashSet<RefreshToken>();
     }
 }

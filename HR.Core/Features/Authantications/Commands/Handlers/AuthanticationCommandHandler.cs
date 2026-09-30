@@ -28,6 +28,7 @@ namespace HR.Core.Features.Authantications.Commands.Handlers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IEmployeeService employeeService;
         private readonly IJwtService jwtService;
+        private readonly IRefreshTokenService refreshTokenService;
         private readonly IStringLocalizer<SharedResources> localizer;
 
         public AuthanticationCommandHandler(IAuthService _authService,
@@ -35,6 +36,7 @@ namespace HR.Core.Features.Authantications.Commands.Handlers
             UserManager<ApplicationUser> userManager,
             IEmployeeService employeeService,
             IJwtService jwtService,
+            IRefreshTokenService refreshTokenService,
             IStringLocalizer<SharedResources> localizer) : base(localizer)
         {
             this.authService = _authService;
@@ -42,6 +44,7 @@ namespace HR.Core.Features.Authantications.Commands.Handlers
             this.userManager = userManager;
             this.employeeService = employeeService;
             this.jwtService = jwtService;
+            this.refreshTokenService = refreshTokenService;
             this.localizer = localizer;
         }
 
@@ -104,18 +107,31 @@ namespace HR.Core.Features.Authantications.Commands.Handlers
             var result = await authService.LoginAsync(request.Email,request.Password);
 
             if (!result.Succeeded)
-                return BadRequest<LoginResponse>(
-                    result.ErrorMessage!);
+                return BadRequest<LoginResponse>(result.ErrorMessage!);
 
-            var (token, expiresAt) = await jwtService.GenerateTokenAsync( result.User!);
+            var user = result.User!;
+
+            var (accessToken, accessTokenExpiresAt) = await jwtService.GenerateTokenAsync(user);
+
+            var refreshToken = await refreshTokenService.CreateAsync(user,cancellationToken);
+
+            // Save refresh token
+            // هنا هنحتاج نضيف SaveChanges بشكل صحيح
+            // حسب transaction design بتاعتك
+            await refreshTokenService.SaveChangesAsync(cancellationToken);
 
             var response = new LoginResponse
             {
-                AccessToken = token,
-                ExpiresAt = expiresAt
+                AccessToken = accessToken,
+
+                AccessTokenExpiresAt = accessTokenExpiresAt,
+
+                RefreshToken =refreshToken.Token,
+
+                RefreshTokenExpiresAt = refreshToken.ExpiresAt
             };
 
-            return Success<LoginResponse>(response,Message:"Login successful.");
+            return Success(response);
         }
     }
 }

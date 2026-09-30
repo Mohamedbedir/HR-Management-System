@@ -28,6 +28,8 @@ namespace HR.Infrastructure
             services.AddScoped<IApplicationRepo, ApplicationRepo>();
             services.AddScoped<ICandidateRepo, CandidateRepo>();
 
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
            //services.AddScoped(typeof(IGenericRepos<>), typeof(GenericRepos<>)); // unitofWork
 
             ////views
