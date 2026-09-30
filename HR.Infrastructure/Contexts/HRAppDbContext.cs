@@ -70,6 +70,7 @@ namespace HR.Infrastructure.Contexts
         public DbSet<Payroll> Payrolls { get; set; }
         public DbSet<PayrollItem> PayrollItems { get; set; }
         public DbSet<PerformanceReview> PerformanceReviews { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     }
 }

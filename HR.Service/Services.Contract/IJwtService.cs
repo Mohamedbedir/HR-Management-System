@@ -9,7 +9,7 @@ namespace HR.Service.Services.Contract
 {
     public interface IJwtService
     {
-        Task<(string Token, DateTime ExpiresAt)> GenerateTokenAsync(
-            ApplicationUser user);
+        Task<(string Token, DateTime ExpiresAt)> GenerateTokenAsync(ApplicationUser user);
+
     }
 }

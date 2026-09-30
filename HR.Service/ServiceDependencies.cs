@@ -35,6 +35,8 @@ namespace HR.Service
 
             services.AddScoped<ICurrentUserService, CurrentUserService>();
 
+            services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+
             return services;
         }
 

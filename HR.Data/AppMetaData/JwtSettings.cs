@@ -15,5 +15,6 @@ namespace HR.Data.AppMetaData
         public string Audience { get; set; } = null!;
 
         public int AccessTokenExpirationMinutes { get; set; }
+        public int RefreshTokenExpirationDays { get; set; }
     }
 }
