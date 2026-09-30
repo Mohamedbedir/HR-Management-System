@@ -66,7 +66,7 @@ namespace HR.Core.Features.Attendances.Queries.Handlers
             if (currentUserService.IsInRole(Roles.Employee))
             {
                 if (currentUserService.EmployeeId != request.EmployeeId)
-                    return Forbidden<List<GetAttendancesForEmpliyeeResponse>>();
+                    return Forbidden<List<GetAttendancesForEmpliyeeResponse>>("You can only view your own attendance.");
 
                 var attendances =
                     await attendanceService.GetEmployeeAttendancesAsync(
@@ -92,7 +92,7 @@ namespace HR.Core.Features.Attendances.Queries.Handlers
                         currentEmployeeId.Value);
 
                 if (!isSubordinate)
-                    return Forbidden<List<GetAttendancesForEmpliyeeResponse>>();
+                    return Forbidden<List<GetAttendancesForEmpliyeeResponse>>("You can only view your subordinates' attendance.");
 
                 var attendances =
                     await attendanceService.GetEmployeeAttendancesAsync(
@@ -127,7 +127,7 @@ namespace HR.Core.Features.Attendances.Queries.Handlers
             if (currentUserService.IsInRole(Roles.Employee))
             {
                 if (currentUserService.EmployeeId != request.EmployeeId)
-                    return Forbidden<List<GetAttendancesForEmpliyeeByDateResponse>>();
+                    return Forbidden<List<GetAttendancesForEmpliyeeByDateResponse>>("You can only view your own attendance.");
 
                 var Attendance = await attendanceService
                 .GetEmployeeAttendancesByDateAsync(request.EmployeeId, request.FromDate, request.ToDate);
@@ -149,7 +149,7 @@ namespace HR.Core.Features.Attendances.Queries.Handlers
                         currentEmployeeId.Value);
 
                 if (!isSubordinate)
-                    return Forbidden<List<GetAttendancesForEmpliyeeByDateResponse>>();
+                    return Forbidden<List<GetAttendancesForEmpliyeeByDateResponse>>("You can only view your subordinates' attendance.");
 
                 var Attendance = await attendanceService
                 .GetEmployeeAttendancesByDateAsync(request.EmployeeId, request.FromDate, request.ToDate);

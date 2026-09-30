@@ -50,7 +50,7 @@ namespace HR.Core.Features.Histories.Queries.Handlers
             if (!currentUserService.IsInRole(Roles.Admin) &&
                 !currentUserService.IsInRole(Roles.HR))
             {
-                return Forbidden<List<GetSalaryHistoryForEmployeeResponse>>();
+                return Forbidden<List<GetSalaryHistoryForEmployeeResponse>>("You are not allowed to view salary history.");
             }
 
             var history =
@@ -85,7 +85,7 @@ namespace HR.Core.Features.Histories.Queries.Handlers
             if (currentUserService.IsInRole(Roles.Employee))
             {
                 if (currentUserService.EmployeeId != request.EmployeeId)
-                    return Forbidden<List<GetHistoryForEmployeeResponse>>();
+                    return Forbidden<List<GetHistoryForEmployeeResponse>>("You can only view your own history.");
 
                 var history =
                     await employmentHistoryService
@@ -103,7 +103,7 @@ namespace HR.Core.Features.Histories.Queries.Handlers
                 var managerEmployeeId = currentUserService.EmployeeId;
 
                 if (!managerEmployeeId.HasValue)
-                    return Forbidden<List<GetHistoryForEmployeeResponse>>();
+                    return Forbidden<List<GetHistoryForEmployeeResponse>>("You are not allowed to view this employee's history.");
 
                 var isSubordinate =
                     await employeeService.IsEmployeeUnderManagerAsync(
@@ -111,7 +111,7 @@ namespace HR.Core.Features.Histories.Queries.Handlers
                         managerEmployeeId.Value);
 
                 if (!isSubordinate)
-                    return Forbidden<List<GetHistoryForEmployeeResponse>>();
+                    return Forbidden<List<GetHistoryForEmployeeResponse>>("You can only view your subordinates' history.");
 
                 var history =
                     await employmentHistoryService
@@ -123,7 +123,7 @@ namespace HR.Core.Features.Histories.Queries.Handlers
                 return Success(mapped);
             }
 
-            return Forbidden<List<GetHistoryForEmployeeResponse>>();
+            return Forbidden<List<GetHistoryForEmployeeResponse>>("You are not allowed to view this employee's history.");
         }
     }
 }

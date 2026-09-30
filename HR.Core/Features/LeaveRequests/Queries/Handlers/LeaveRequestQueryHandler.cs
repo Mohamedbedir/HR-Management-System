@@ -55,11 +55,11 @@ namespace HR.Core.Features.LeaveRequests.Queries.Handlers
             if (currentUserService.IsInRole(Roles.Manager))
             {
                 if (!currentUserService.EmployeeId.HasValue)
-                    return Forbidden<GetLeaveRequestByIdRespose>();
+                    return Forbidden<GetLeaveRequestByIdRespose>("You are not allowed to view this leave request.");
 
                 var isSub = await employeeService.IsEmployeeUnderManagerAsync(leaveRequest.EmployeeId, currentUserService.EmployeeId.Value);
                 if (!isSub)
-                    return Forbidden<GetLeaveRequestByIdRespose>();
+                    return Forbidden<GetLeaveRequestByIdRespose>("You can only view your subordinates' leave requests.");
 
                 var mapped = mapper.Map<GetLeaveRequestByIdRespose>(leaveRequest);
                 return Success(mapped);
@@ -68,13 +68,13 @@ namespace HR.Core.Features.LeaveRequests.Queries.Handlers
             if (currentUserService.IsInRole(Roles.Employee))
             {
                 if (!currentUserService.EmployeeId.HasValue || currentUserService.EmployeeId.Value != leaveRequest.EmployeeId)
-                    return Forbidden<GetLeaveRequestByIdRespose>();
+                    return Forbidden<GetLeaveRequestByIdRespose>("You can only view your own leave requests." );
 
                 var mapped = mapper.Map<GetLeaveRequestByIdRespose>(leaveRequest);
                 return Success(mapped);
             }
 
-            return Forbidden<GetLeaveRequestByIdRespose>();
+            return Forbidden<GetLeaveRequestByIdRespose>("You are not allowed to view this leave request.");
         }
 
         public async Task<Response<List<GetLeaveRequestsRespose>>> Handle(GetLeaveRequestsQuery request, CancellationToken cancellationToken)
@@ -101,11 +101,11 @@ namespace HR.Core.Features.LeaveRequests.Queries.Handlers
             if (currentUserService.IsInRole(Roles.Manager))
             {
                 if (!currentUserService.EmployeeId.HasValue)
-                    return Forbidden<List<GetLeaveRequestsForEmployeeRespose>>();
+                    return Forbidden<List<GetLeaveRequestsForEmployeeRespose>>("You are not allowed to view this employee's leave requests.");
 
                 var isSub = await employeeService.IsEmployeeUnderManagerAsync(request.EmployeeId, currentUserService.EmployeeId.Value);
                 if (!isSub)
-                    return Forbidden<List<GetLeaveRequestsForEmployeeRespose>>();
+                    return Forbidden<List<GetLeaveRequestsForEmployeeRespose>>("You can only view your subordinates' leave requests.");
 
                 var leaveRequests = await requestService.GetEmployeeLeaveRequestsAsync(request.EmployeeId);
                 var mapped = mapper.Map<List<GetLeaveRequestsForEmployeeRespose>>(leaveRequests);
@@ -115,14 +115,14 @@ namespace HR.Core.Features.LeaveRequests.Queries.Handlers
             if (currentUserService.IsInRole(Roles.Employee))
             {
                 if (!currentUserService.EmployeeId.HasValue || currentUserService.EmployeeId.Value != request.EmployeeId)
-                    return Forbidden<List<GetLeaveRequestsForEmployeeRespose>>();
+                    return Forbidden<List<GetLeaveRequestsForEmployeeRespose>>("You can only view your own leave requests.");
 
                 var leaveRequests = await requestService.GetEmployeeLeaveRequestsAsync(request.EmployeeId);
                 var mapped = mapper.Map<List<GetLeaveRequestsForEmployeeRespose>>(leaveRequests);
                 return Success(mapped);
             }
 
-            return Forbidden<List<GetLeaveRequestsForEmployeeRespose>>();
+            return Forbidden<List<GetLeaveRequestsForEmployeeRespose>>("You are not allowed to view this employee's leave requests.");
         }
     }
 }
