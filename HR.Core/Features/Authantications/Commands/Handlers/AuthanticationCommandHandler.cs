@@ -21,7 +21,9 @@ namespace HR.Core.Features.Authantications.Commands.Handlers
 {
     public class AuthanticationCommandHandler : ResponseHandler,
         IRequestHandler<RegisterCommand, Bases.Response<string>>,
-        IRequestHandler<LoginCommand, Bases.Response<LoginResponse>>
+        IRequestHandler<LogoutCommand, Bases.Response<string>>,
+        IRequestHandler<LoginCommand, Bases.Response<LoginResponse>>,
+        IRequestHandler<RefreshTokenCommand, Bases.Response<LoginResponse>>
     {
         private readonly IAuthService authService;
         private readonly RoleManager<IdentityRole<int>> roleManager;
@@ -132,6 +134,61 @@ namespace HR.Core.Features.Authantications.Commands.Handlers
             };
 
             return Success(response);
+        }
+
+        public async Task<Bases.Response<LoginResponse>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+        {
+            var refreshToken = await refreshTokenService.GetActiveTokenAsync(request.RefreshToken,
+                cancellationToken);
+
+            if (refreshToken is null)
+                return Unauthorized<LoginResponse>();
+
+            var user = refreshToken.User;
+
+            if (user is null)
+                return Unauthorized<LoginResponse>();
+
+            // Revoke old refresh token
+            await refreshTokenService.RevokeAsync( refreshToken, cancellationToken);
+
+            // Generate new access token
+            var (accessToken, accessTokenExpiresAt) =  await jwtService.GenerateTokenAsync(user);
+
+            // Generate new refresh token
+            var newRefreshToken =  await refreshTokenService.CreateAsync( user, cancellationToken);
+
+            await refreshTokenService.SaveChangesAsync( cancellationToken);
+
+            var response = new LoginResponse
+            {
+                AccessToken = accessToken,
+
+                AccessTokenExpiresAt = accessTokenExpiresAt,
+
+                RefreshToken = newRefreshToken.Token,
+
+                RefreshTokenExpiresAt = newRefreshToken.ExpiresAt
+            };
+
+            return Success(response);
+        }
+
+        public async Task<Bases.Response<string>> Handle(LogoutCommand request, CancellationToken cancellationToken)
+        {
+            var refreshToken = await refreshTokenService.GetActiveTokenAsync( request.RefreshToken,
+                cancellationToken);
+
+            if (refreshToken is null)
+            {
+                return BadRequest<string>("Invalid or expired refresh token.");
+            }
+
+            await refreshTokenService.RevokeAsync( refreshToken);
+
+            await refreshTokenService.SaveChangesAsync(cancellationToken);
+
+            return Success<string>("",Message:"Logged out successfully.");
         }
     }
 }
