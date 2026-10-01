@@ -1,5 +1,6 @@
 ﻿using HR.Core.Bases;
 using HR.Core.Features.Authantications.Commands.Models;
+using HR.Core.Features.Authantications.Commands.Respnses;
 using HR.Data.AppMetaData;
 using HR.Service.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -13,9 +14,9 @@ namespace HR.API.Controllers
     public class AccountController : AppControllerBase
     {
         [HttpPost(Router.AccountRouting.LogIn)]
-        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Response<string>>> Login([FromBody] LoginCommand model)
+        [ProducesResponseType(typeof(Response<LoginResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Response<LoginResponse>), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Response<LoginResponse>>> Login([FromBody] LoginCommand model)
         {
             var response = await mediator.Send(model);
             return NewResult(response);
@@ -29,6 +30,27 @@ namespace HR.API.Controllers
             var response = await mediator.Send(model);
             return NewResult(response);
         }
-        
+        //[Authorize]
+        [HttpPost(Router.AccountRouting.RefreshToken)]
+        [ProducesResponseType(typeof(Response<LoginResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Response<LoginResponse>), StatusCodes.Status401Unauthorized)]
+        [AllowAnonymous]
+        public async Task<ActionResult<Response<LoginResponse>>> RefreshToken([FromBody] RefreshTokenCommand command)
+        {
+            var response = await mediator.Send(command);
+
+            return NewResult(response);
+        }
+        [Authorize]
+        [HttpPost(Router.AccountRouting.LogOut)]
+        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Response<string>>> Logout([FromBody] LogoutCommand command)
+        {
+            var response = await mediator.Send(command);
+
+            return NewResult(response);
+        }
+
     }
 }

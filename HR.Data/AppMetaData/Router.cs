@@ -190,6 +190,7 @@ namespace HR.Data.AppMetaData
             public const string List = Prefix+"/List";
             public const string LogIn = Prefix + "/LogIn";
             public const string Register = Prefix + "/Register";
+            public const string LogOut = Prefix + "/LogOut";
             public const string RefreshToken = Prefix + "/Refresh-Token";
             public const string ValidateToken = Prefix + "/Validate-Token";
             public const string ConfirmEmail = Prefix + "/ConfirmEmail";
