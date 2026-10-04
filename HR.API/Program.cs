@@ -102,6 +102,18 @@ builder.Services.AddAuthentication(options =>
 //    options.TokenLifespan = TimeSpan.FromMinutes(2);
 //});
 
+#region CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+#endregion
 #region RareLimit
 builder.Services.AddRateLimiter(opt =>
 {
@@ -183,6 +195,7 @@ app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseRateLimiter();
+app.UseCors("AllowAngular");
 app.UseAuthentication();
 app.UseAuthorization();
 
