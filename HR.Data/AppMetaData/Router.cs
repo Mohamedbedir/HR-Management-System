@@ -46,6 +46,16 @@ namespace HR.Data.AppMetaData
             public const string Update = Prefix + "/{id}";
             public const string Delete = Prefix + "/{id}";
         }
+        public static class DashboardRouting
+        {
+            public const string Prefix = Rule + "Dashboard";
+            public const string List = Prefix + "";
+            public const string Paginated = Prefix + "";
+            public const string Statistics = Prefix + "/Statistics" ;
+            public const string RecentActivities = Prefix + "/RecentActivities";
+            public const string ForEmployeeByDate = Prefix + "/ByDate" + "/{EmployeeId}";
+         
+        }
         public static class LeaveRequestRouting
         {
             public const string Prefix = Rule+ "LeaveRequests";

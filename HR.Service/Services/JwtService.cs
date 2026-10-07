@@ -38,7 +38,7 @@ namespace HR.Service.Services
                 new Claim(ClaimTypes.NameIdentifier,
                     user.Id.ToString()),
 
-                new Claim(ClaimTypes.Email,user.Email ?? string.Empty)
+                new Claim(JwtRegisteredClaimNames.Email,user.Email ?? string.Empty)
             };
 
             // EmployeeId

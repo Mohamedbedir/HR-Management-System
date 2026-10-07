@@ -24,6 +24,8 @@ namespace HR.Service
             services.AddScoped<IJobPostingService, JobPostingService>();
             services.AddScoped<IApplicationService, ApplicationService>();
             services.AddScoped<ICandidateService, CandidateService>();
+            
+            services.AddScoped<IDashboardService, DashboardService>();
 
             services.AddTransient<IFileService, FileService>();
 
