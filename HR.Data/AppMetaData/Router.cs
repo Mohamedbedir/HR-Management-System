@@ -91,7 +91,7 @@ namespace HR.Data.AppMetaData
             public const string SalaryHistory = Prefix + "/SalaryHistory"+"/{employeeId}";
             public const string EmploymentHistory = Prefix + "/EmploymentHistory" + "/{employeeId}";
             public const string List = Prefix+"";
-            public const string Paginated = Prefix+ "";
+            public const string Paginated = Prefix+ "/Paginated";
             public const string ById = Prefix + ""+ "/{id}";
             public const string Create = Prefix + "";
             public const string Update = Prefix + "/{id}";

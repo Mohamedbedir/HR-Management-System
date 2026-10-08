@@ -9,6 +9,7 @@ using HR.Core.Features.Employees.Queries.Models;
 using HR.Core.Features.Employees.Queries.Responses;
 using HR.Core.Features.Histories.Queries.Models;
 using HR.Core.Features.Histories.Queries.Responses;
+using HR.Core.Pagenation;
 using HR.Data.AppMetaData;
 using HR.Data.Entities;
 using HR.Service.Services;
@@ -72,6 +73,16 @@ namespace HR.API.Controllers
             return NewResult(response);
         }
         [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
+        //[EnableRateLimiting("Fixed")]
+        [HttpGet(Router.EmployeeRouting.Paginated)]
+        [ProducesResponseType(typeof(PaginatedResult<GetEmployeesResponse>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<PaginatedResult<GetEmployeesResponse>>> 
+            GetEmployeesPaginated([FromQuery] GetEmployeesPaginationQuery query)
+        {
+            var response = await mediator.Send(query);
+            return Ok(response);
+        }
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
         [HttpPost(Router.EmployeeRouting.Create)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status422UnprocessableEntity)]
@@ -81,6 +92,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(model);
             return NewResult(response);
         }
+        
         [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
         [HttpPut(Router.EmployeeRouting.Update)]
         [ProducesResponseType(typeof(Response<string>),StatusCodes.Status200OK)]
