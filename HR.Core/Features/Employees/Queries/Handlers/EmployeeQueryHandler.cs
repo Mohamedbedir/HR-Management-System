@@ -4,6 +4,7 @@ using HR.Core.Features.Attendances.Queries.Responses;
 using HR.Core.Features.Departments.Queries.Responses;
 using HR.Core.Features.Employees.Queries.Models;
 using HR.Core.Features.Employees.Queries.Responses;
+using HR.Core.Pagenation;
 using HR.Data.AppMetaData;
 using HR.Data.Entities;
 using HR.Service.Services;
@@ -21,7 +22,8 @@ namespace HR.Core.Features.Employees.Queries.Handlers
 {
     public class EmployeeQueryHandler : ResponseHandler,
         IRequestHandler<GetEmployeeByIdQuery, Response<GetEmployeeByIdResponse>>,
-        IRequestHandler<GetEmployeesQuery, Response<IReadOnlyList<GetEmployeesResponse>>>
+        IRequestHandler<GetEmployeesQuery, Response<IReadOnlyList<GetEmployeesResponse>>>,
+        IRequestHandler<GetEmployeesPaginationQuery, PaginatedResult<GetEmployeesResponse>>
     {
         private readonly IStringLocalizer<SharedResources> localizer;
         private readonly IEmployeeService employeeService;
@@ -94,6 +96,27 @@ namespace HR.Core.Features.Employees.Queries.Handlers
             var Emps = await employeeService.GetEmployeesAsync();
             var Emps_Mapped = mapper.Map<IReadOnlyList<GetEmployeesResponse>>(Emps);
             return Success(Emps_Mapped, Meta: new { DataCount = Emps_Mapped.Count() });
+        }
+
+        public async Task<PaginatedResult<GetEmployeesResponse>> Handle(GetEmployeesPaginationQuery request, CancellationToken cancellationToken)
+        {
+            var Queryable = await employeeService.FilterEmployeePaginatedQueryable(
+                request.OrderBy, request.FilterByStatus, request.Search);
+            var paginetedList = await Queryable.Select(s => new GetEmployeesResponse
+            {
+                Id = s.Id,
+                FirstName = s.FirstName,
+                LastName = s.LastName,
+                Email = s.Address,
+                Phone = s.Phone,
+                DepartmentName = s.Department.Name,
+                PositionTitle = s.Position.Title,
+                ManagerName = s.Manager.FirstName + " " + s.Manager.LastName,
+                HireDate=s.HireDate,
+                Status = s.Status.ToString(),
+                Gender = s.Gender.ToString(),
+            }).ToPaginatedListAsync(request.PageNumber, request.PageSize);
+            return paginetedList;
         }
     }
 }

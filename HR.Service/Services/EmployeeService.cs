@@ -1,4 +1,5 @@
 ﻿using HR.Data.Entities;
+using HR.Data.Enums;
 using HR.Infrastructure.Repositories;
 using HR.Infrastructure.Repositories.Contract;
 using HR.Service.Services.Contract;
@@ -267,6 +268,47 @@ namespace HR.Service.Services
                 await transaction.DisposeAsync();
             }
 
+        }
+
+        public async Task<IQueryable<Employee>> FilterEmployeePaginatedQueryable
+            (EmployeeOrderEnum orderby, EmployeeStatus? FilterByStatus, string? search)
+        {
+            var Querable = employeeRepo.GetTableNoTracking()
+                .Include(d => d.Department)
+                .Include(d => d.Manager)
+                .Include(d => d.Position)
+                .AsQueryable();
+            if (search != null)
+            {
+                Querable = Querable.Where(s => s.EmployeeNumber.Contains(search) 
+                ||s.FirstName.Contains(search) || s.Address.Contains(search));
+
+            }
+            if (FilterByStatus != null)
+            {
+                Querable = Querable.Where(s => s.Status == FilterByStatus);
+            }
+
+            switch (orderby)
+            {
+                
+                case EmployeeOrderEnum.FirstName:
+                    Querable = Querable.OrderBy(s => s.FirstName);
+                    break;
+                case EmployeeOrderEnum.LastName:
+                    Querable = Querable.OrderBy(s => s.LastName);
+                    break;
+                case EmployeeOrderEnum.DepartmentName:
+                    Querable = Querable.OrderBy(s => s.Department.Name);
+                    break;
+                case EmployeeOrderEnum.HireDate:
+                    Querable = Querable.OrderBy(s => s.HireDate);
+                    break;
+                default:
+                    Querable = Querable.OrderBy(s => s.Id);
+                    break;
+            }
+            return Querable;
         }
     }
 }
