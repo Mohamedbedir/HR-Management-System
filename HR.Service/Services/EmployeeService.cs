@@ -82,19 +82,32 @@ namespace HR.Service.Services
 
         public async Task<string> DeleteEmployeeAsync(Employee employee)
         {
-            var isUsed = await employeeRepo.GetTableNoTracking().AnyAsync(e=>e.ManagerId== employee.Id);
+            // Check if employee is manager of other employees
+            var isUsedAsManager = await employeeRepo.GetTableNoTracking().AnyAsync(e => e.ManagerId == employee.Id);
 
-
-            if (isUsed)
+            if (isUsedAsManager)
             {
                 throw new Exception("Cannot delete this employee because they are a manager of other employees.");
             }
 
+            // Check dependent data that has Restrict delete behavior in the model
+            var hasEmploymentHistory = await employmentHistoryRepo.GetTableNoTracking().AnyAsync(h => h.EmployeeId == employee.Id);
+            if (hasEmploymentHistory)
+            {
+                throw new Exception("Cannot delete this employee because there are employment history records linked to them. Delete or detach those records first.");
+            }
+
+            var hasSalaryHistory = await salaryHistoryRepo.GetTableNoTracking().AnyAsync(h => h.EmployeeId == employee.Id);
+            if (hasSalaryHistory)
+            {
+                throw new Exception("Cannot delete this employee because there are salary history records linked to them. Delete or detach those records first.");
+            }
+
+            // No blocking relations detected - perform delete
             employeeRepo.DeleteAsync(employee);
             await employeeRepo.SaveChangesAsync();
             return "Success";
-           
-           
+
         }
 
         public async Task<Employee?> GetEmployeeByIdAsync(int id)
