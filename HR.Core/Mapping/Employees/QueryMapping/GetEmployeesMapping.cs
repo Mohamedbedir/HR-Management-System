@@ -15,6 +15,7 @@ namespace HR.Core.Mapping.Employees
             CreateMap<Employee, GetEmployeesResponse>()
                 .ForMember(d => d.DepartmentName, o => o.MapFrom(s => s.Department.Name))
                 .ForMember(d => d.PositionTitle, o => o.MapFrom(s => s.Position.Title))
+                .ForMember(d => d.ManagerId, o => o.MapFrom(s => s.Manager.Id))
                 .ForMember(d => d.ManagerName, o => o.MapFrom(s => s.Manager.FirstName + " " + s.Manager.LastName));
 
             

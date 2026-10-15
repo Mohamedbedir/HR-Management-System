@@ -22,5 +22,6 @@ namespace HR.Core.Features.Employees.Queries.Responses
         public string? DepartmentName { get; set; }
         public string? PositionTitle { get; set; }
         public string? ManagerName { get; set; }
+        public int? ManagerId { get; set; }
     }
 }
