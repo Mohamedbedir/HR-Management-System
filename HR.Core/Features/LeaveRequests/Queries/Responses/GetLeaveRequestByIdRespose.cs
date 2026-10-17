@@ -10,6 +10,7 @@ namespace HR.Core.Features.LeaveRequests.Queries.Responses
 {
     public class GetLeaveRequestByIdRespose
     {
+        public int Id { get; set; }
         public DateOnly StartDate { get; set; }
 
         public DateOnly EndDate { get; set; }

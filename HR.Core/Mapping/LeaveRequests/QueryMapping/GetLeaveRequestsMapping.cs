@@ -14,6 +14,7 @@ namespace HR.Core.Mapping.LeaveRequests
         {
             CreateMap<LeaveRequest, GetLeaveRequestsRespose>()
                 .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()))
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.Id))
                 .ForMember(d => d.EmployeeName, o => o.MapFrom(s => s.Employee.FirstName + " " + s.Employee.LastName))
                 .ForMember(d => d.LeaveType, o => o.MapFrom(s => s.LeaveType.Name))
                 .ForMember(d => d.ApprovedByName, o => o.MapFrom(s => s.ApprovedBy.FirstName + " " + s.ApprovedBy.LastName))
