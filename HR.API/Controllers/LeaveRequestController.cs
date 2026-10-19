@@ -66,9 +66,9 @@ namespace HR.API.Controllers
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Response<string>>> LeaveRequestApprove([FromBody] int LeaveRequestId)
+        public async Task<ActionResult<Response<string>>> LeaveRequestApprove([FromBody] ApproveLeaveRequestCommand model)
         {
-            var response = await mediator.Send(new ApproveLeaveRequestCommand(LeaveRequestId));
+            var response = await mediator.Send(model);
             return NewResult(response);
         }
 
