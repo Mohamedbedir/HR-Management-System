@@ -68,7 +68,9 @@ namespace HR.Service.Services
             {
                 UserName = request.Email.Split('@')[0],
                 Email = request.Email,
-                EmployeeId = request.EmployeeId
+                EmployeeId = request.EmployeeId,
+                PhoneNumber=request.PhoneNumber
+                
             };
 
             var result = await _userManager.CreateAsync(
