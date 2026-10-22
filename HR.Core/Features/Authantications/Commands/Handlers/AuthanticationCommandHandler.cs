@@ -55,9 +55,9 @@ namespace HR.Core.Features.Authantications.Commands.Handlers
         {
             // Employee Not Found
             var employeeExists =
-                await employeeService.IsEmployeeExistById(request.EmployeeId);
+                await employeeService.GetEmployeeByIdAsync(request.EmployeeId);
 
-            if (!employeeExists)
+            if (employeeExists is null)
                 return NotFound<string>("Employee not found.");
 
             //Check Employee already has account
@@ -89,7 +89,9 @@ namespace HR.Core.Features.Authantications.Commands.Handlers
                 EmployeeId = request.EmployeeId,
                 Email = request.Email,
                 Password = request.Password,
-                Role = request.Role
+                Role = request.Role,
+                PhoneNumber = employeeExists.Phone
+               
             };
 
             try
