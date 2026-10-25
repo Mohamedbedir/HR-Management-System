@@ -187,12 +187,13 @@ namespace HR.Data.AppMetaData
             public const string Paginated = Prefix + "/Paginated";
             public const string ById = Prefix + "/ById"+ "/{id}";
             public const string Create = Prefix + "/Create";
+            public const string EditRoles = Prefix + "/Edit-Roles";
             public const string CurrentUser = Prefix + "/CurrentUser";
             public const string Update = Prefix + "/Update";
             public const string ChangePassword = Prefix + "/Change-Password";
-            public const string LockUser = Prefix + "/Lock-User" + "/{id}";
-            public const string UnLockUser = Prefix + "/UnLock-User" + "/{id}";
-            public const string Delete = Prefix + "/Delete"+ "/{id}";
+            public const string LockUser = Prefix + "/Lock-User" ;
+            public const string UnLockUser = Prefix + "/UnLock-User" ;
+            public const string Delete = Prefix + "/{id}";
         }
         public static class AccountRouting
         {

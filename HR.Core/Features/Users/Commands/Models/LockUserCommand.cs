@@ -10,8 +10,8 @@ namespace HR.Core.Features.Users.Commands.Models
 {
     public class LockUserCommand : IRequest<Response<string>>
     {
-        public string Id { get; set; }
-        public LockUserCommand(string id)
+        public int Id { get; set; }
+        public LockUserCommand(int id)
         {
             Id = id;
         }

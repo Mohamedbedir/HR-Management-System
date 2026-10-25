@@ -21,6 +21,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(model);
             return NewResult(response);
         }
+        [Authorize(Roles = $"{Roles.Admin}")]
         [HttpPost(Router.AccountRouting.Register)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
