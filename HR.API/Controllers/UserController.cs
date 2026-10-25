@@ -13,6 +13,7 @@ using SchoolProject.API.Base;
 
 namespace HR.API.Controllers
 {
+    [Authorize(Roles = $"{Roles.Admin}")]
     [ApiController]
     public class UserController : AppControllerBase
     {
@@ -29,20 +30,50 @@ namespace HR.API.Controllers
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Response<string>>> LockUser([FromRoute] string id)
+        public async Task<ActionResult<Response<string>>> LockUser([FromBody] LockUserCommand model)
         {
 
-            var response = await mediator.Send(new LockUserCommand(id));
+            var response = await mediator.Send(model);
             return NewResult(response);
         }
         [HttpPut(Router.UserRouting.UnLockUser)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Response<string>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Response<string>>> UnLockUser([FromRoute] string id)
+        public async Task<ActionResult<Response<string>>> UnLockUser([FromBody] UnLockUserCommand model)
         {
 
-            var response = await mediator.Send(new UnLockUserCommand(id));
+            var response = await mediator.Send(model);
+            return NewResult(response);
+        }
+
+        [HttpPut(Router.UserRouting.ChangePassword)]
+        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Response<string>>> ChangePassword([FromBody] ChangeUserPasswordCommand model)
+        {
+
+            var response = await mediator.Send(model);
+            return NewResult(response);
+        }
+
+        [HttpPut(Router.UserRouting.EditRoles)]
+        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Response<string>>> EditRolesForUser([FromBody] EditRolesForUserCommand model)
+        {
+            var response = await mediator.Send(model);
+            return NewResult(response);
+        }
+        [HttpDelete(Router.UserRouting.Delete)]
+        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Response<string>>> DeleteUser([FromRoute] int id)
+        {
+            var response = await mediator.Send(new DeleteAppUserCommand(id));
             return NewResult(response);
         }
 
@@ -65,28 +96,11 @@ namespace HR.API.Controllers
             var response = await mediator.Send(model);
             return NewResult(response);
         }
-        [HttpPut(Router.UserRouting.ChangePassword)]
-        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Response<string>>> ChangePassword([FromBody] ChangeUserPasswordCommand model)
-        {
-
-            var response = await mediator.Send(model);
-            return NewResult(response);
-        }
+        
        
 
 
 
-        [HttpDelete(Router.UserRouting.Delete)]
-        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Response<string>>> DeleteUser([FromRoute] string id)
-        {
-            var response = await mediator.Send(new DeleteAppUserCommand(id));
-            return NewResult(response);
-        }*/
+        */
     }
 }

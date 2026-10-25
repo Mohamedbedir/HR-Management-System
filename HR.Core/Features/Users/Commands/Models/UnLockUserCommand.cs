@@ -10,8 +10,8 @@ namespace HR.Core.Features.Users.Commands.Models
 {
     public class UnLockUserCommand : IRequest<Response<string>>
     {
-        public string Id { get; set; }
-        public UnLockUserCommand(string id)
+        public int Id { get; set; }
+        public UnLockUserCommand(int id)
         {
             Id = id;
         }

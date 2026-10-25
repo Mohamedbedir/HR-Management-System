@@ -42,12 +42,22 @@ namespace HR.Core.Features.Users.Queries.Handlers
                 var search = request.searsh.Trim().ToLowerInvariant();
                 alluser = alluser.Where(u =>
                     (u.Email != null && u.Email.ToLower().Contains(search)) ||
+                    (u.PhoneNumber != null && u.Employee.Phone.ToLower().Contains(search)) ||
                     (u.Employee != null && u.Employee.FirstName.ToLower().Contains(search)) ||
                     (u.Employee != null && u.Employee.LastName.ToLower().Contains(search)));
             }
-
             var users = await alluser.ToListAsync(cancellationToken);
+            //GetAllUsersResponse response = new GetAllUsersResponse();
+            //response.Roles=userManager.GetRolesAsync(users.FirstOrDefault()).Result.ToList();
             var mappedUser = mapper.Map<IReadOnlyList<GetAllUsersResponse>>(users);
+            foreach(var user in mappedUser)
+            {
+                var dbuser = users.FirstOrDefault(u => u.Id == user.Id);
+                if(dbuser != null)
+                {
+                    user.Roles = (await userManager.GetRolesAsync(dbuser)).ToList();
+                }
+            }
 
             return Success(mappedUser);
         }

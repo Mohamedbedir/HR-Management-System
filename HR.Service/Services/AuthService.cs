@@ -41,6 +41,15 @@ namespace HR.Service.Services
                 };
             }
 
+            if(await _userManager.IsLockedOutAsync(user)) {
+
+                return new LoginResult
+                {
+                    Succeeded = false,
+                    ErrorMessage = "Your account is locked"
+                };
+            }
+
             var passwordValid = await _userManager.CheckPasswordAsync(
                 user,
                 password);
