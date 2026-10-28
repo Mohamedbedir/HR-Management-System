@@ -10,6 +10,7 @@ using HR.Data.Enums;
 using HR.Service.Services;
 using HR.Service.Services.Contract;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Localization;
 using SchoolProject.Core.Localization;
 using System;
@@ -26,18 +27,22 @@ namespace HR.Core.Features.Candidates.Commands.Handlers
         IRequestHandler<DeleteCandidateCommand, Response<string>>
     {
         private readonly ICandidateService candidateService;
+        private readonly IDistributedCache cache;
         private readonly IJobPostingService jobPostingService;
         private readonly IMapper mapper;
         private readonly IFileService fileService;
         private readonly IStringLocalizer<SharedResources> localizer;
 
-        public CandidateCommandHandler(ICandidateService candidateService,
+        private const string AllCandidatesCacheKey = "Candidates:all";
+
+        public CandidateCommandHandler(ICandidateService candidateService,IDistributedCache cache,
             IJobPostingService jobPostingService,
             IMapper mapper,
             IFileService fileService,
             IStringLocalizer<SharedResources> localizer):base(localizer) 
         {
             this.candidateService = candidateService;
+            this.cache = cache;
             this.jobPostingService = jobPostingService;
             this.mapper = mapper;
             this.fileService = fileService;
@@ -48,8 +53,7 @@ namespace HR.Core.Features.Candidates.Commands.Handlers
         
         public async Task<Response<string>> Handle(DeleteCandidateCommand request, CancellationToken cancellationToken)
         {
-            var candidate =
-        await candidateService.GetByIdAsync(request.Id);
+            var candidate = await candidateService.GetByIdAsync(request.Id);
 
             if (candidate == null)
                 return NotFound<string>("Candidate not found.");
@@ -67,6 +71,8 @@ namespace HR.Core.Features.Candidates.Commands.Handlers
 
             await candidateService.DeleteAsync(candidate);
             await candidateService.SaveChangesAsync();
+            
+            await cache.RemoveAsync(AllCandidatesCacheKey);
 
             if (!string.IsNullOrEmpty(cvPath))
             {
@@ -114,6 +120,7 @@ namespace HR.Core.Features.Candidates.Commands.Handlers
 
             await candidateService.UpdateAsync(candidate);
             await candidateService.SaveChangesAsync();
+            await cache.RemoveAsync(AllCandidatesCacheKey);
 
             if (request.CV != null && !string.IsNullOrEmpty(oldCVPath))
             {
@@ -156,6 +163,7 @@ namespace HR.Core.Features.Candidates.Commands.Handlers
 
             await candidateService.AddAsync(candidate);
             await candidateService.SaveChangesAsync();
+            await cache.RemoveAsync(AllCandidatesCacheKey);
 
             return Success<string>(
                 "Candidate created successfully.");

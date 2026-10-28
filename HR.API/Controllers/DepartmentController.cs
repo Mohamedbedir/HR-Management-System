@@ -11,7 +11,7 @@ using SchoolProject.API.Base;
 
 namespace HR.API.Controllers
 {
-    [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
+    [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Recruiter}")]
     //[Route("api/[controller]")]
     [ApiController]
     public class DepartmentController : AppControllerBase
