@@ -3,11 +3,14 @@ using HR.Data.Entities.Recruitment;
 using HR.Infrastructure.Repositories;
 using HR.Infrastructure.Repositories.Contract;
 using HR.Service.Services.Contract;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace HR.Service.Services
@@ -15,15 +18,20 @@ namespace HR.Service.Services
     public class JobPostingService : IJobPostingService
     {
         private readonly IJobPostingRepo jobPostingRepo;
+        private readonly IDistributedCache cache;
 
-        public JobPostingService(IJobPostingRepo jobPostingRepo)
+        private const string AllJobPostingsCacheKey = "JobPostings:all";
+
+        public JobPostingService(IJobPostingRepo jobPostingRepo, IDistributedCache cache)
         {
             this.jobPostingRepo = jobPostingRepo;
+            this.cache = cache;
         }
         public async Task<string> CreateJobPostingAsync(JobPosting JobPosting)
         {
             await jobPostingRepo.AddAsync(JobPosting);
             await jobPostingRepo.SaveChangesAsync();
+            await cache.RemoveAsync(AllJobPostingsCacheKey);
             return "Success";
         }
 
@@ -34,6 +42,7 @@ namespace HR.Service.Services
             {
                 jobPostingRepo.DeleteAsync(JobPosting);
                 await jobPostingRepo.SaveChangesAsync();
+                await cache.RemoveAsync(AllJobPostingsCacheKey);
                 return "Success";
             }
             catch (DbUpdateException ex)
@@ -52,10 +61,25 @@ namespace HR.Service.Services
 
         public async Task<IReadOnlyList<JobPosting>> GetAllJobPostingsAsync()
         {
+            var cachedData = await cache.GetStringAsync(AllJobPostingsCacheKey);
+            if(cachedData != null)
+            {
+                return JsonSerializer.Deserialize<IReadOnlyList<JobPosting>>(cachedData)!;
+            }
+
             var jobs = await jobPostingRepo.GetTableNoTracking()
                 .Include(s => s.Department)
                 .Include(s => s.Position)
                 .ToListAsync();
+
+            var json = JsonSerializer.Serialize(jobs);
+            var options = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            };
+
+            await cache.SetStringAsync(AllJobPostingsCacheKey, json, options);
+
             return jobs;
         }
 
@@ -92,6 +116,7 @@ namespace HR.Service.Services
         {
             jobPostingRepo.UpdateAsync(JobPosting);
             await jobPostingRepo.SaveChangesAsync();
+            await cache.RemoveAsync(AllJobPostingsCacheKey);
             return "Success";
         }
     }

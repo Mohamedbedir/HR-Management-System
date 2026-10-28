@@ -1,11 +1,14 @@
 ﻿using HR.Data.Entities.Recruitment;
 using HR.Infrastructure.Repositories.Contract;
 using HR.Service.Services.Contract;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace HR.Service.Services
@@ -13,10 +16,14 @@ namespace HR.Service.Services
     public class CandidateService : ICandidateService
     {
         private readonly ICandidateRepo candidateRepo;
+        private readonly IDistributedCache cache;
 
-        public CandidateService(ICandidateRepo candidateRepo)
+        private const string AllCandidatesCacheKey = "Candidates:all";
+
+        public CandidateService(ICandidateRepo candidateRepo,IDistributedCache cache)
         {
             this.candidateRepo = candidateRepo;
+            this.cache = cache;
         }
 
         public async Task<Candidate?> GetByIdAsync(int id)
@@ -75,9 +82,25 @@ namespace HR.Service.Services
 
         public async Task<IReadOnlyList<Candidate>> GetAllAsync()
         {
-            return await candidateRepo
-                .GetTableNoTracking()
-                .ToListAsync();
+            var cachedData = await cache.GetStringAsync(AllCandidatesCacheKey);
+            if (cachedData is not null)
+            {
+                //cach hit
+                return JsonSerializer.Deserialize<IReadOnlyList<Candidate>>(cachedData)!;
+            }
+            //cach miss
+            var candidte= await candidateRepo.GetTableNoTracking().ToListAsync();
+
+            var json = JsonSerializer.Serialize(candidte);
+            var options = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            };
+
+            await cache.SetStringAsync(AllCandidatesCacheKey, json, options);
+
+
+            return candidte;
         }
     }
 }

@@ -102,6 +102,15 @@ builder.Services.AddAuthentication(options =>
 //    options.TokenLifespan = TimeSpan.FromMinutes(2);
 //});
 
+#region Caching-Redis
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "HR:";
+    
+});
+#endregion
+
 #region CORS
 builder.Services.AddCors(options =>
 {
@@ -112,7 +121,6 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
-
 #endregion
 #region RareLimit
 builder.Services.AddRateLimiter(opt =>
@@ -135,7 +143,6 @@ builder.Services.AddRateLimiter(opt =>
 });
 
 #endregion
-
 #region Localization
 builder.Services.AddLocalization(opt =>
 {
