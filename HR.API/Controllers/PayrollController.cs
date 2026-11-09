@@ -19,7 +19,7 @@ namespace HR.API.Controllers
     [ApiController]
     public class PayrollController : AppControllerBase
     {
-        [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Employee},{Roles.Manager}")]
         [HttpGet(Router.PayrollRouting.ById)]
         [ProducesResponseType(typeof(Response<GetPayrollByIdResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFound<GetPayrollByIdResponse>), StatusCodes.Status404NotFound)]
@@ -36,7 +36,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new GetPayrollsQuery());
             return NewResult(response);
         }
-        [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Employee},{Roles.Manager}")]
         [HttpGet(Router.PayrollRouting.ForEmployee)]
         [ProducesResponseType(typeof(Response<List<GetPayrollsForEmployeeResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFound<List<GetPayrollsForEmployeeResponse>>), StatusCodes.Status404NotFound)]

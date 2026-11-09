@@ -119,6 +119,9 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:4200")
             .AllowAnyHeader()
             .AllowAnyMethod();
+        //policy.WithOrigins("https://zjdmfh9g-4200.eun1.devtunnels.ms/")
+        //    .AllowAnyHeader()
+        //    .AllowAnyMethod();
     });
 });
 #endregion
@@ -127,7 +130,7 @@ builder.Services.AddRateLimiter(opt =>
 {
     opt.AddSlidingWindowLimiter("Fixed",opt =>
     {
-        opt.PermitLimit = 5;
+        opt.PermitLimit = 10;
         opt.Window = TimeSpan.FromMinutes(1);
         opt.QueueLimit = 0;
         opt.SegmentsPerWindow = 1;
@@ -198,11 +201,11 @@ var options = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
 app.UseRequestLocalization(options.Value);
 
 #endregion
+app.UseCors("AllowAngular");
 app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseRateLimiter();
-app.UseCors("AllowAngular");
 app.UseAuthentication();
 app.UseAuthorization();
 
