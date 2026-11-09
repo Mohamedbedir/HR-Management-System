@@ -9,6 +9,7 @@ A modern Human Resources Management System built with **ASP.NET Core** following
 * Position & Job Title Management
 * Attendance & Leave Management
 * Payroll Management
+* Performance Review
 * Authentication & Authorization (JWT)
 * Role-Based Access Control
 * File Upload Support
