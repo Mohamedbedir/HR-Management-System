@@ -13,7 +13,9 @@ A modern Human Resources Management System built with **ASP.NET Core** following
 * Role-Based Access Control
 * File Upload Support
 * Validation & Exception Handling
-* Logging with Serilog
+* RateLimit
+* Caching-Redis
+* CORS
 * RESTful APIs with Swagger Documentation
 
 ## Technologies
@@ -27,7 +29,9 @@ A modern Human Resources Management System built with **ASP.NET Core** following
 * MediatR
 * AutoMapper
 * FluentValidation
-* Serilog
+* RateLimit
+* Caching-Redis
+* CORS
 * JWT Authentication
 * Swagger / OpenAPI
 
