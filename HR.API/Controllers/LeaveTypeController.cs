@@ -14,7 +14,7 @@ using SchoolProject.API.Base;
 
 namespace HR.API.Controllers
 {
-    [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
+    [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Employee},{Roles.Manager}")]
     [ApiController]
     public class LeaveTypeController : AppControllerBase
     {

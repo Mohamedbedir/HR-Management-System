@@ -45,7 +45,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new GetEmployeeByIdQuery(id));
             return NewResult(response);
         }
-        [Authorize(Roles =$"{Roles.Admin},{Roles.HR},{Roles.Manager},{Roles.Employee}")]
+        [Authorize(Roles =$"{Roles.Admin},{Roles.HR},{Roles.Manager},{Roles.Employee},{Roles.Manager}")]
         [HttpGet(Router.EmployeeRouting.EmploymentHistory)]
         [ProducesResponseType(typeof(Response<List<GetHistoryForEmployeeResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFound<List<GetHistoryForEmployeeResponse>>), StatusCodes.Status404NotFound)]
@@ -54,7 +54,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new GetHistoryForEmployeeQuery(employeeId));
             return NewResult(response);
         }
-        [Authorize(Roles =$"{Roles.Admin},{Roles.HR}")]
+        [Authorize(Roles =$"{Roles.Admin},{Roles.HR},{Roles.Employee},{Roles.Manager}")]
         [HttpGet(Router.EmployeeRouting.SalaryHistory)]
         [ProducesResponseType(typeof(Response<List<GetSalaryHistoryForEmployeeResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFound<List<GetSalaryHistoryForEmployeeResponse>>), StatusCodes.Status404NotFound)]
@@ -63,7 +63,7 @@ namespace HR.API.Controllers
             var response = await mediator.Send(new GetSalaryHistoryForEmployeeQuery(employeeId));
             return NewResult(response);
         }
-        [Authorize(Roles = $"{Roles.Admin},{Roles.HR}")]
+        [Authorize(Roles = $"{Roles.Admin},{Roles.HR},{Roles.Manager}")]
         [EnableRateLimiting("Fixed")]
         [HttpGet(Router.EmployeeRouting.List)]
         [ProducesResponseType(typeof(Response<IReadOnlyList<GetEmployeesResponse>>), StatusCodes.Status200OK)]

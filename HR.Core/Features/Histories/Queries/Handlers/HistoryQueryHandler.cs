@@ -48,7 +48,9 @@ namespace HR.Core.Features.Histories.Queries.Handlers
                 return NotFound<List<GetSalaryHistoryForEmployeeResponse>>();
             // Only Admin / HR should reach this operation
             if (!currentUserService.IsInRole(Roles.Admin) &&
-                !currentUserService.IsInRole(Roles.HR))
+                !currentUserService.IsInRole(Roles.HR) && 
+                !currentUserService.IsInRole(Roles.Employee) && 
+                !currentUserService.IsInRole(Roles.Manager))
             {
                 return Forbidden<List<GetSalaryHistoryForEmployeeResponse>>("You are not allowed to view salary history.");
             }
@@ -69,7 +71,8 @@ namespace HR.Core.Features.Histories.Queries.Handlers
                 return NotFound<List<GetHistoryForEmployeeResponse>>();
             // Admin / HR → can see any employee
             if (currentUserService.IsInRole(Roles.Admin) ||
-                currentUserService.IsInRole(Roles.HR))
+                currentUserService.IsInRole(Roles.HR)||
+                currentUserService.IsInRole(Roles.Manager))
             {
                 var history =
                     await employmentHistoryService

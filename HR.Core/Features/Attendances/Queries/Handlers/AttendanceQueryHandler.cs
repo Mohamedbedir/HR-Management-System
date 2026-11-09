@@ -50,7 +50,8 @@ namespace HR.Core.Features.Attendances.Queries.Handlers
 
             // 2. Admin and HR can see any employee's attendance
             if (currentUserService.IsInRole(Roles.Admin) ||
-                currentUserService.IsInRole(Roles.HR))
+                currentUserService.IsInRole(Roles.HR)||
+                currentUserService.IsInRole(Roles.Manager))
             {
                 var attendances =
                     await attendanceService.GetEmployeeAttendancesAsync(
